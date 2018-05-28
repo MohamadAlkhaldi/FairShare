@@ -60,16 +60,61 @@ var Chaincode = class {
 
   async newAid(stub, args) {
    
-    //Adding aid to family 
-    let method = that['addAid'];
+    //Checking if family exists and creting an entry if it doesnt 
+    let method = that['checkFamily'];
     await method(stub, args,that);
 
-    //Updating Orginization informations
-    let method1 = that['updateOrg'];
+    //Adding aid to family 
+    let method1 = that['addAid'];
     await method1(stub, args,that);
+
+    //Updating Orginization informations
+    let method2 = that['updateOrg'];
+    await method2(stub, args,that);
 
   
 
+  }
+
+  async checkFamily(stub, args) {
+    let id = args[0];
+    let organization = args[1];
+    let amount = args[2]
+    let date = args[3]
+
+
+    //checking if family exists
+    let valuebytes = await stub.getState(id);
+    if (valuebytes.toString() === "") {
+      let familyInfo = {
+        familyId : id,
+        income : 'undefined',
+        rent : 'undefined',
+        address : 'undefined',
+        familyMembers: 'undefined',
+        date: date
+      }
+
+      await stub.putState('?'+id, Buffer.from(JSON.stringify(familyInfo)));
+    }
+  }
+
+  async getFamilyInfo(stub, args) {
+    if (args.length != 1) {
+      throw new Error('Incorrect number of arguments. Expecting name of the organization to query')
+    } 
+
+    let jsonResp = {};
+    let orgName =  '?' + args[0];
+
+    // Get the state from the ledger
+    let Avalbytes = await stub.getState(orgName);
+    if (!Avalbytes) {
+      jsonResp.error = 'Failed to get state for ' + args[0];
+      throw new Error(JSON.stringify(jsonResp));
+    }
+
+    return Avalbytes;
   }
 
   async addAid(stub, args) {
