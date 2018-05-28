@@ -58,7 +58,7 @@ var Chaincode = class {
     }
   }
 
-  async newAid(stub, args) {
+  async newAid(stub, args ,that) {
    
     //Checking if family exists and creting an entry if it doesnt 
     let method = that['checkFamily'];
