@@ -2,39 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 
-const input={
-  padding: '10px 10px 10px 10px',
-  display: 'block',
-  marginRight: 'auto',
-  marginLeft: 'auto',
-  marginTop:'20px',
-  color:'black',
-  fontSize:'15px',
-  border: '2px solid black',
-  borderRadius: '15px',
-};
-
-const button={
-  padding:'5px',
-  display: 'block',
-  marginRight: 'auto',
-  marginLeft: 'auto',
-  backgroundColor: '#000000',
-  color: 'white',
-  border: '2px solid #000000',
-  borderRadius: '10px',
-  marginTop:'20px',
-  fontSize:'20px',
-  fontFamily: 'Lobster',
-};
-
-const p ={
-  color:'#000000',
-  fontWeight:'bold',
-  textAlign:'center',
-  fontSize:'20px',
-  marginBottom:'-10px',
-};
 class CreateAccount extends React.Component {
   constructor(props) {
 
@@ -72,13 +39,29 @@ class CreateAccount extends React.Component {
     return (
      
       
-      <div>
+      <div className='container-fluid'>
       
-      <p style={p}>USER NAME:</p><input style={input} name='username' onChange={this.onChange} />
-      <p style={p} >PASSWORD:</p><input style={input} name='password' onChange={this.onChange} />
-      <p style={p} >EMAIL:</p><input style={input} name='email' onChange={this.onChange} />
-      <button  style={button} onClick={()=> this.signUp(this.state.username,this.state.password)}>Create Account</button>
-     
+     <div className="container animatedMove">
+
+      <h3 style={{color:'#17503C' , fontFamily:'Merriweather'}}><strong>Add New Account</strong></h3>
+            
+          <form>
+            <div className="form-group">
+              <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Username</label>
+              <input type="email" className="form-control" id="email" placeholder="Enter email" name='username' onChange={this.onChange} />
+            </div>
+            <div className="form-group">
+              <label style={{color:'#FF5733', marginRight: '10px'}} for="pwd">Password</label>
+              <input type="password" className="form-control" id="pwd" placeholder="Enter password" name='password' onChange={this.onChange} />
+            </div>
+            <div className="form-group">
+              <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Email</label>
+              <input type="email" className="form-control" id="email" placeholder="Enter email" name='email' onChange={this.onChange} />
+            </div>
+            <button className='btn btn-lg choiceButton' type="submit" onClick={()=> this.signUp(this.state.username,this.state.password)}><strong>Submit</strong></button>
+      
+          </form>
+        </div>
 
       </div>
  
