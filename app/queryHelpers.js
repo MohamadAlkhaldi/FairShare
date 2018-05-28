@@ -288,7 +288,74 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 });
 }
 
+var login = function(req,res){
+	var username = req.body.username;
+	var password = req.body.password;
+	if(username.toLowerCase() === 'guest'){
+		blockchainUser =  'user1' ;
+	res.send('guest');
+}else {
+	
+Fabric_Client.newDefaultKeyValueStore({ path: store_path
+}).then(keyStore).then((user_from_store) => {
+	if (user_from_store && user_from_store.isEnrolled()) {
+		console.log('Successfully loaded '+blockchainUser+' from persistence');
+		member_user = user_from_store;
+	} else {
+		throw new Error('Failed to get '+blockchainUser+' ... run registerUser.js');
+	}
 
+	const request = {
+		//targets:[peer],
+		chaincodeId: 'mycc',
+		fcn: 'queryUser',
+		args: [username]
+	};
+
+	// send the query proposal to the peer
+	return channel.queryByChaincode(request);
+}).then((query_responses) => {
+	console.log("Query has completed, checking results");
+	// query_responses could have more than one results if there multiple peers were used as targets
+	if (query_responses && query_responses.length == 2 ) {
+		if (query_responses[0] instanceof Error || query_responses[1] instanceof Error) {
+			console.error("error from query = ", query_responses[0]);
+		} else if(query_responses[0].toString() === query_responses[1].toString()){
+			console.log("Response is ", query_responses[0].toString())
+			console.log('hiiiii', typeof JSON.parse(query_responses[0].toString()))
+			if(JSON.parse(query_responses[0].toString()).password === password){
+				blockchainUser = 'admin';
+				res.send(username);} 
+				else{ console.log("wrong password")
+					res.sendStatus(404)}
+			//res.send(JSON.parse(query_responses[0].toString()))
+		}
+	} else {
+		console.log("No payloads were returned from query");
+	}
+}).catch((err) => {
+	console.error('Failed to query successfully :: ' + err);
+});
+
+}
+}
+
+// var init = function(){
+// 	let user = db.User({
+//             userName: "admin",
+//             passWord: "admin"           
+//           })
+//           user.save((err, data) =>{
+//             if (err){
+//               console.log(err);
+//             }
+//             else {
+//               console.log(data);
+//             }
+//           })          
+// }
+
+module.exports.login = login
 module.exports.query = query
 module.exports.signUp = signUp
 module.exports.invoke = invoke
