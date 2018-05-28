@@ -168,8 +168,28 @@ var Chaincode = class {
     return Buffer.from(JSON.stringify(results));
   }
 
+  async registerUser(stub,args){
+    let user = {
+      docType: 'user',
+      username: args[0],
+      password: args[1] 
+    }
+     await stub.putState(args[0], Buffer.from(JSON.stringify(user)));
+  }
+async queryUser(stub,args){
+   let user = await stub.getState(args[0]);
+    if (!user) {
+      jsonResp.error = 'Failed to get state for ' + args[0];
+      throw new Error(JSON.stringify(jsonResp));
+    }
+    return user
+    
+}
+
 
 
 };
+
+
 
 shim.start(new Chaincode());
