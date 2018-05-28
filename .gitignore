@@ -1,0 +1,15 @@
+
+network/node_modules
+network/channel-artifacts/*.tx
+network/channel-artifacts/*.block
+network/crypto-config/*
+network/docker-compose-e2e.yaml
+network/ledgers
+network/ledgers-backup
+network/hfc-key-store/
+
+chaincode-docker-devmode/myc.block
+chaincode-docker-devmode/chaincode/sacc/sacc
+chaincode-docker-devmode/network/chaincode/chaincodeFF
+
+
