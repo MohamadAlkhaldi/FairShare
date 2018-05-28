@@ -101,7 +101,7 @@ var Chaincode = class {
 
   async getFamilyInfo(stub, args) {
     if (args.length != 1) {
-      throw new Error('Incorrect number of arguments. Expecting name of the organization to query')
+      throw new Error('Incorrect number of arguments. Expecting name of the family to query')
     } 
 
     let jsonResp = {};
@@ -188,6 +188,26 @@ var Chaincode = class {
     await stub.putState('#'+organization, Buffer.from(JSON.stringify(val)));
 
   }
+
+  async searchByOrg(stub, args) {
+    if (args.length != 1) {
+      throw new Error('Incorrect number of arguments. Expecting name of the organization to query')
+    }
+
+    let jsonResp = {};
+    let orgName =  '#' + args[0];
+
+    // Get the state from the ledger
+    let Avalbytes = await stub.getState(orgName);
+    if (!Avalbytes) {
+      jsonResp.error = 'Failed to get state for ' + args[0];
+      throw new Error(JSON.stringify(jsonResp));
+    }
+
+    return Avalbytes;
+  }
+
+  
   async getAllResults(iterator, isHistory) {
     let allResults = [];
     while (true) {
