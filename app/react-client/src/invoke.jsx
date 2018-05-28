@@ -1,40 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import {Redirect} from "react-router-dom";
 
-const input={
-  padding: '10px 10px 10px 10px',
-  display: 'block',
-  marginRight: 'auto',
-  marginLeft: 'auto',
-  marginTop:'20px',
-  color:'black',
-  fontSize:'15px',
-  border: '2px solid black',
-  borderRadius: '15px',
-};
-
-const button={
-  padding:'5px',
-  display: 'block',
-  marginRight: 'auto',
-  marginLeft: 'auto',
-  backgroundColor: '#000000',
-  color: 'white',
-  border: '2px solid #000000',
-  borderRadius: '10px',
-  marginTop:'20px',
-  fontSize:'20px',
-  fontFamily: 'Lobster',
-};
-
-const p ={
-  color:'#000000',
-  fontWeight:'bold',
-  textAlign:'center',
-  fontSize:'20px',
-  marginBottom:'-10px',
-};
 class Invoke extends React.Component {
   constructor(props) {
 
@@ -74,22 +42,41 @@ class Invoke extends React.Component {
   }
 
    render () {
+    if(this.props.loggedIn){
     return (
-     
+      <div className='container-fluid'>
+
+       <div className="container animatedMove">
+       <center>
+            <h3 style={{color:'#17503C' , fontFamily:'Merriweather'}}><strong>Add New Aid</strong></h3>
+            <form>
+              <div className="form-group">
+                <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Organization</label>
+                <input type="text" className="form-control" id="email" placeholder="Enter email" name='ORG' onChange={this.onChange} />
+              </div>
+              <div className="form-group">
+                <label style={{color:'#FF5733', marginRight: '10px'}} for="pwd">FamilyID</label>
+                <input type="text" className="form-control" id="pwd" placeholder="Enter FamilyID" name='FamilyID' onChange={this.onChange} />
+              </div>
+              <div className="form-group">
+                <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Amount</label>
+                <input type="email" className="form-control" id="email" placeholder="Enter Amount" name='Amount' onChange={this.onChange} />
+              </div>
+              <div className="form-group">
+                <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Date</label>
+                <input type="date" className="form-control" id="email" placeholder="Enter email" name='Date' onChange={this.onChange} />
+              </div>
+              <button className='btn btn-lg choiceButton' type="submit" onClick={()=> this.invoke('newAid',this.state.ORG,this.state.FamilyID,this.state.Amount,this.state.Date)}><strong>Submit</strong></button>
       
-      <div>
-      
-       <p style={p}>ORG:</p><input style={input} name='ORG' onChange={this.onChange} />
-      <p style={p} >FamilyID:</p><input style={input} name='FamilyID' onChange={this.onChange} />
-      <p style={p} >Amount:</p><input style={input} name='Amount' onChange={this.onChange} />
-      <p style={p} >Date:</p><input style={input} name='Date' type="date" onChange={this.onChange} />
-      <button  style={button} onClick={()=> this.invoke('newAid',this.state.ORG,this.state.FamilyID,this.state.Amount,this.state.Date)}>submit the last aid </button>
-     
+            </form>
+            </center>
+          </div>
 
       </div>
- 
-
       )
+     } else{
+         return <Redirect to='/login'/>
+      }
    }
 
 }

@@ -5,39 +5,6 @@ import App from './index.jsx';
 import {BrowserRouter as Router, Route, Link, NavLink, Redirect, Prompt, IndexRoute, hashHistory } from "react-router-dom";
 
 
-const input={
-  padding: '10px 10px 10px 10px',
-  display: 'block',
-  marginRight: 'auto',
-  marginLeft: 'auto',
-  marginTop:'20px',
-  color:'black',
-  fontSize:'15px',
-  border: '2px solid black',
-  borderRadius: '15px',
-};
-
-const button={
-  padding:'5px',
-  display: 'block',
-  marginRight: 'auto',
-  marginLeft: 'auto',
-  backgroundColor: '#000000',
-  color: 'white',
-  border: '2px solid #000000',
-  borderRadius: '10px',
-  marginTop:'20px',
-  fontSize:'20px',
-  fontFamily: 'Lobster',
-};
-
-const p ={
-  color:'#000000',
-  fontWeight:'bold',
-  textAlign:'center',
-  fontSize:'20px',
-  marginBottom:'-10px',
-};
 class Sign extends React.Component {
 
 constructor(props) {
@@ -70,27 +37,45 @@ onChange (e) {
       url: '/login',
       data:{username:username,password:password},
       success: () => {
-        this.setState({redirect : true})
+        this.props.changeLoggedIn(true)
     }
 })
   }
 
 
 render () {
-    const { redirect } = this.state;
-       if (redirect) {
+    const loggedIn = this.props.loggedIn;
+       if (loggedIn) {
          return <Redirect to='/app'/>;
        }
     return (
      
       
-      <div>
+      <div >
       
-      <p style={p}>USER NAME:</p><input style={input} name='username' onChange={this.onChange} />
-      <p style={p} >PASSWORD:</p><input style={input} name='password' onChange={this.onChange} />
-
-      <button  style={button} onClick={()=> this.logIn(this.state.username,this.state.password)}>Sign In </button>
      
+
+      <div className="container animatedMove" style={{ marginTop: '30px'}}>
+          <form className="form-inline" >
+            <div className="form-group">
+              <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Username</label>
+              <input type="email" className="form-control" id="email" placeholder="Enter email" name='username' onChange={this.onChange} />
+            </div>
+            <div className="form-group">
+              <label style={{color:'#FF5733', marginRight: '10px'}} for="pwd">Password</label>
+              <input type="password" className="form-control" id="pwd" placeholder="Enter password" name='password' onChange={this.onChange} />
+            </div>
+            <button onClick={()=> this.logIn(this.state.username,this.state.password)} type="submit" className="login-button"><i className="glyphicon glyphicon-chevron-right"></i></button>
+          </form>
+        </div>
+
+        <div className="container text-center" style={{marginTop: '80px', color:'#D2D2D2'}}>
+        
+        <h3 style={{fontFamily:'Merriweather'}}><em>"We have created a blabla bla blab blala"</em></h3>
+        <h4 style={{fontFamily:'Merriweather'}}>Mohamad</h4>
+        <br/>
+
+        </div>
 
       </div>
  

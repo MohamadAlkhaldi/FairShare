@@ -53,52 +53,52 @@ class App extends React.Component {
       argsQuery:""
 
     }
-    this.onChange=this.onChange.bind(this);
+    // this.onChange=this.onChange.bind(this);
     this.redirect=this.redirect.bind(this);
-       this.query=this.query.bind(this);
-    this.queryAll=this.queryAll.bind(this);
+    //    this.query=this.query.bind(this);
+    // this.queryAll=this.queryAll.bind(this);
   }
 
 
-  onChange (e) {
-    this.setState({
+  // onChange (e) {
+  //   this.setState({
 
-     [e.target.name]: e.target.value });
+  //    [e.target.name]: e.target.value });
     
-  }
+  // }
 
-  query(fcn,args) {
-    $.ajax({
-      type:'POST',
-      url: '/query',
-      data:{fcn:fcn,args:args}, 
-      success: (data) => {
-        console.log(data)
-        this.setState({
-          item:data
-        })
-      }
-    });
+  // query(fcn,args) {
+  //   $.ajax({
+  //     type:'POST',
+  //     url: '/query',
+  //     data:{fcn:fcn,args:args}, 
+  //     success: (data) => {
+  //       console.log(data)
+  //       this.setState({
+  //         item:data
+  //       })
+  //     }
+  //   });
 
 
-  }
+  // }
 
 
  
 
-  queryAll(fcn,args) {
-    $.ajax({
-      type:'POST',
-      url: '/getAll',
-      data:{fcn:fcn,args:args}, 
-      success: (data) => {
-        console.log(data)
-        this.setState({
-          items:data
-        })
-      }
-    });
-  }
+  // queryAll(fcn,args) {
+  //   $.ajax({
+  //     type:'POST',
+  //     url: '/getAll',
+  //     data:{fcn:fcn,args:args}, 
+  //     success: (data) => {
+  //       console.log(data)
+  //       this.setState({
+  //         items:data
+  //       })
+  //     }
+  //   });
+  // }
 
   redirect(data){
     this.setState({redirect : true, data:data})
@@ -108,44 +108,40 @@ class App extends React.Component {
 
   render () {
     const { redirect } = this.state;
-       if (redirect) {
-         return <Redirect to={this.state.data}/>;
-       }
+    if (redirect) {
+      return <Redirect to={this.state.data}/>;
+    }
     this.state.new = this.props.username
-    if(this.state.new === "guest"){
-      console.log(this.state.new)
-    return (
-      <div>
-
-      
-      <p style={p}>last Aid for :</p><input style={input} name='argsQuery' onChange={this.onChange} />
-      
-      <button  style={button} onClick={()=> this.query('searchByOrg',this.state.argsQuery)}>get one aid </button>
-      <button  style={button} onClick={()=> this.queryAll('aidHistory',this.state.argsQuery)}>get history aid </button>
-
-      <p style={p}>{this.state.item.amount}</p>
-      <List items={this.state.items}/>
-
-      </div>
-      )}else if(this.state.new === "admin"){
+    // if(this.state.new === "guest"){
+    //   console.log(this.state.new)
+    //   return <Redirect to='/queryGuest'/>;
+    
+    //   }else 
+    if(this.state.new === "admin" && this.props.loggedIn){
       return (
-      <div>
+      <div className='container-fluid animatedMove' style={{ marginTop: '30px'}}>
 
-      <button  style={button} onClick={()=> this.redirect('/createAccount')}>Create Account</button>
-      <button  style={button} onClick={()=> this.redirect('/query')}>Query</button>
-      <button  style={button} onClick={()=> this.redirect('/invoke')}>Invoke</button>
-      
-
+      <center>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/createAccount')}><strong>Create Account</strong></button>
+      <br/>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/query')}><strong>Query</strong></button>
+      <br/>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/invoke')}><strong>Invoke</strong></button>
+      <br/>
+      </center>
       </div>
-      )} else {
+      )} else if(this.props.loggedIn){
         return (
-      <div>
-      <button  style={button} onClick={()=> this.redirect('/query')}>Query</button>
-      <button  style={button} onClick={()=> this.redirect('/invoke')}>Invoke</button>
-      
-
+      <div className='container-fluid animatedMove' style={{ marginTop: '30px'}}>
+      <center>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/query')}><strong>Query</strong></button>
+      <br/>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/invoke')}><strong>Invoke</strong></button>
+      </center>
       </div>
       )
+      } else{
+         return <Redirect to='/login'/>
       }
 
   }
