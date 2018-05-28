@@ -77,6 +77,8 @@ var Chaincode = class {
   }
 
   async checkFamily(stub, args) {
+
+    //Get args value
     let id = args[0];
     let organization = args[1];
     let amount = args[2]
@@ -104,17 +106,45 @@ var Chaincode = class {
       throw new Error('Incorrect number of arguments. Expecting name of the family to query')
     } 
 
-    let jsonResp = {};
     let orgName =  '?' + args[0];
 
     // Get the state from the ledger
     let Avalbytes = await stub.getState(orgName);
     if (!Avalbytes) {
-      jsonResp.error = 'Failed to get state for ' + args[0];
-      throw new Error(JSON.stringify(jsonResp));
+      throw new Error(JSON.stringify('Failed to get state for ' + args[0]));
     }
 
     return Avalbytes;
+  }
+
+  async updateFamily(stub, args) {
+    if (args.length != 1) {
+      throw new Error('Incorrect number of arguments. Expecting 6 arguments')
+    } 
+
+    //Get args value
+    let familyId = args[0];
+    let income = args[1];
+    let rent = args[2];
+    let address = args[3];
+    let familyMembers = args[4];
+    let date = args[5];
+
+    let valbytes = await stub.getState('?'+familyId);
+    if (!valbytes) {
+      throw new Error('Failed to get state of family' + familyId);
+    }
+    let val =JSON.parse(valbytes.toString());
+    
+    val.income = income 
+    val.rent = rent
+    val.address = address
+    val.familyMembers = familyMembers
+    val.date = date
+
+    // Write the states back to the ledger
+    await stub.putState('?'+familyId, Buffer.from(JSON.stringify(val)));
+
   }
 
   async addAid(stub, args) {
@@ -207,7 +237,7 @@ var Chaincode = class {
     return Avalbytes;
   }
 
-  
+
   async getAllResults(iterator, isHistory) {
     let allResults = [];
     while (true) {
