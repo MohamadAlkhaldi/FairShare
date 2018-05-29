@@ -23,12 +23,12 @@ class CreateAccount extends React.Component {
      [e.target.name]: e.target.value });
     
   }
-  signUp(username,password){
-    console.log(username, password);
+  signUp(e){
+    e.preventDefault();
     $.ajax({
       type:'POST',
       url: '/signUp',
-      data:{username:username,password:password},
+      data:{username:this.state.username,password:this.state.password},
       success: () => {
         //this.setState({redirect : true})
     }
@@ -47,18 +47,14 @@ class CreateAccount extends React.Component {
             
           <form>
             <div className="form-group">
-              <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Username</label>
-              <input type="email" className="form-control" id="email" placeholder="Enter email" name='username' onChange={this.onChange} />
+              <label style={{color:'#FF5733', marginRight: '10px'}} htmlFor="username">Username</label>
+              <input type="text" className="form-control" id="username" placeholder="Enter username" name='username' onChange={this.onChange} />
             </div>
             <div className="form-group">
-              <label style={{color:'#FF5733', marginRight: '10px'}} for="pwd">Password</label>
+              <label style={{color:'#FF5733', marginRight: '10px'}} htmlFor="pwd">Password</label>
               <input type="password" className="form-control" id="pwd" placeholder="Enter password" name='password' onChange={this.onChange} />
             </div>
-            <div className="form-group">
-              <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Email</label>
-              <input type="email" className="form-control" id="email" placeholder="Enter email" name='email' onChange={this.onChange} />
-            </div>
-            <button className='btn btn-lg choiceButton' type="submit" onClick={()=> this.signUp(this.state.username,this.state.password)}><strong>Submit</strong></button>
+            <button className='btn btn-lg choiceButton' type="submit" onClick={this.signUp}><strong>Submit</strong></button>
       
           </form>
         </div>

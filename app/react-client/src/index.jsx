@@ -6,39 +6,6 @@ import {BrowserRouter as Router, Route, Link, NavLink, Redirect, Prompt, IndexRo
 import List from './components/List.jsx';
 import Sign from './signing.jsx'
 
-const input={
-  padding: '10px 10px 10px 10px',
-  display: 'block',
-  marginRight: 'auto',
-  marginLeft: 'auto',
-  marginTop:'20px',
-  color:'black',
-  fontSize:'15px',
-  border: '2px solid black',
-  borderRadius: '15px',
-};
-
-const button={
-  padding:'5px',
-  display: 'block',
-  marginRight: 'auto',
-  marginLeft: 'auto',
-  backgroundColor: '#000000',
-  color: 'white',
-  border: '2px solid #000000',
-  borderRadius: '10px',
-  marginTop:'20px',
-  fontSize:'20px',
-  fontFamily: 'Lobster',
-};
-
-const p ={
-  color:'#000000',
-  fontWeight:'bold',
-  textAlign:'center',
-  fontSize:'20px',
-  marginBottom:'-10px',
-};
 class App extends React.Component {
   constructor(props) {
 
