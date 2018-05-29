@@ -8,7 +8,7 @@ class QueryGuest extends React.Component {
 
     super(props);
     this.state = {
-      info: {amountOfDonations: 5432, amountofLastDonation: 32, docType: "user", lastDonationDate: "33/44/44", numberOfDonations: 20},
+      info: '',
       argsQuery:""
     }
     this.onChange=this.onChange.bind(this);
@@ -26,6 +26,7 @@ class QueryGuest extends React.Component {
       url: '/query',
       data:{fcn:fcn,args:args}, 
       success: (data) => {
+
         console.log(data)
         this.setState({
           info:data
@@ -46,9 +47,9 @@ class QueryGuest extends React.Component {
         
       <button className='btn btn-lg choiceButton' onClick={()=> this.query('searchByOrg',this.state.argsQuery)}><strong>Get</strong></button>
       <br/>
-      <div>{ this.state.info !== '' ?
+      <div>{ this.state.info !== 'failed' && this.state.info !== ''?
       <div className="panel panel-success" style={{width:'400px'}}>
-            <div className="panel-heading f" style={{color:'#17503C '}}><h3>{this.state.argsQuery}Ahed Group</h3></div>
+            <div className="panel-heading f" style={{color:'#17503C '}}><h3>{this.state.argsQuery}</h3></div>
             <div className="panel-body">
             <p>Total Donations: {this.state.info.amountOfDonations}</p>
             <p>Number Of Donations: {this.state.info.numberOfDonations}</p>
@@ -56,6 +57,9 @@ class QueryGuest extends React.Component {
             <p>Last Donation amount: {this.state.info.amountofLastDonation}</p>
             </div>
       </div> : null}
+      <div>
+        {this.state.info === 'failed' ? <h3 className="mssgErr w3-animate-zoom">No such organization</h3> : null}
+      </div>
       </div>
       </center>
       

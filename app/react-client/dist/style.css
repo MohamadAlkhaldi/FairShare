@@ -1,5 +1,11 @@
+.mssgErr{
+  color:red;
+  /*background-color: #FF5733;*/
+  margin-left: 10px;
+}
 .mssg{
   color:#FF5733;
+  /*background-color: #FF5733;*/
   margin-left: 10px;
 }
 .f{
