@@ -289,9 +289,9 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }
 
 var login = function(req,res){
-	var username = req.body.username;
+	var username = '#'+req.body.username;
 	var password = req.body.password;
-	if(username.toLowerCase() === 'guest'){
+	if(username.toLowerCase() === '#guest'){
 		blockchainUser =  'user1' ;
 	res.send('guest');
 }else {
