@@ -31,7 +31,7 @@ render () {
         </div>
       </div>
       
-      <div className="container-fluid greyB" style={{padding:'5%'}}>
+      <div className="container-fluid greyB" style={{padding:'5%', backgroundColor:'#C7CBCA'}}>
         <div className="row" style={{paddingLeft:'7%'}}>
           <div className="col-sm-4">
             <span className="glyphicon glyphicon-link logoI"></span>
@@ -81,7 +81,7 @@ render () {
     </div>
     </div>
 
-    <div className="container-fluid greyB text-center" style={{padding:'5%'}}>
+    <div className="container-fluid greyB text-center" style={{padding:'5%', backgroundColor:'#C7CBCA'}}>
             
         <h2 style={{ color:'#FF5733', fontFamily:'Merriweather'}}  >JOIN EXCELLENCE!</h2>
         <h4>blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla</h4>
