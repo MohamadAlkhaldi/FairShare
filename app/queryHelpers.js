@@ -156,6 +156,7 @@ var signUp = function(req,res){
 					resolve(return_status); // we could use reject(new Error('Problem with the tranaction, event status ::'+code));
 				} else {
 					console.log('The transaction has been committed on peer ' + event_hub._ep._endpoint.addr);
+					res.send('success')
 					resolve(return_status);
 				}
 			}, (err) => {
@@ -266,6 +267,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 					console.error('The transaction was invalid, code = ' + code);
 					resolve(return_status); // we could use reject(new Error('Problem with the tranaction, event status ::'+code));
 				} else {
+					res.send('success')
 					console.log('The transaction has been committed on peer ' + event_hub._ep._endpoint.addr);
 					resolve(return_status);
 				}
