@@ -42,6 +42,7 @@ class Query extends React.Component {
         this.setState({
           items:data
         })
+        
         // if(!Array.isArray(data) && data.TxId){
         //   this.setState({
         //     items:[{Value:data}]

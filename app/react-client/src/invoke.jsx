@@ -11,7 +11,8 @@ class Invoke extends React.Component {
       ORG:"",
       FamilyID:"",
       Amount:"",
-      Date:""
+      Date:"",
+      familyinfo:true
     }
     this.onChange=this.onChange.bind(this);
     this.invoke=this.invoke.bind(this);
@@ -32,11 +33,26 @@ class Invoke extends React.Component {
       url: '/invoke',
       data:{fcn:fcn,args:[famid,org,amount,date]}, 
       success: (data) => {
+
         this.setState({
           items:data
         })
       }
-    });
+    })
+    // $.ajax({
+    //   type:'POST',
+    //   url: '/query',
+    //  data:{fcn:'getFamilyInfo',args:famid}, 
+    //   success: (data) => {
+    //     console.log(data)
+    //   },
+    //   error: ()=> {
+    //     this.setState({
+    //       familyinfo:false
+    //     })
+    //   }
+    // })
+    // ;
 
 
   }
@@ -67,6 +83,9 @@ class Invoke extends React.Component {
                 <input type="date" className="form-control" id="email" placeholder="Enter email" name='Date' onChange={this.onChange} />
               </div>
               <button className='btn btn-lg choiceButton' type="submit" onClick={()=> this.invoke('newAid',this.state.ORG,this.state.FamilyID,this.state.Amount,this.state.Date)}><strong>Submit</strong></button>
+              <div>
+              {!this.state.familyinfo ? <button className='btn btn-lg choiceButton' ><strong>This family's info is not available, update it here please!</strong></button> : null}
+              </div>
       
             </form>
             </center>
