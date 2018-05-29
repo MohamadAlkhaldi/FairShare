@@ -19,50 +19,59 @@ function printHelp () {
 
 
 
-
-
-
-function networkUp () {
-
+# Starting the network
+function networkUp () { 
+  # Check if directory exists 
   if [ ! -d "crypto-config" ]; then
+    # if crypto-cinfig exists call these functions 
     generateCerts
     replacePrivateKey
     generateChannelArtifacts
   fi
-  
+    # Starting the network using docker-compose-cli.ymal and docker-compose-couch.yaml
     IMAGE_TAG="latest" docker-compose -f docker-compose-cli.yaml -f docker-compose-couch.yaml up -d 2>&1
-  
-  if [ $? -ne 0 ]; then
-    echo "ERROR !!!! Unable to start network"
-    exit 1
-  fi
 
+    if [ $? -ne 0 ]; then
+      echo "ERROR !!!! Unable to start network"
+      exit 1
+    fi
+  # excute the scripts in scripts/script.sh with docker cli
   docker exec cli scripts/script.sh "mychannel" 3 node 10
   if [ $? -ne 0 ]; then
     echo "ERROR !!!! Test failed"
     exit 1
   fi
+  cd ../app
+  node enrollAdmin.js
+  node registerUser.js
 }
 
-
+# Stopping and deleting the network
 function networkDown () {
+  # Stopping the network 
   docker-compose -f docker-compose-cli.yaml -f docker-compose-couch.yaml down --volumes
   docker-compose -f docker-compose-cli.yaml down --volumes
-    CONTAINER_IDS=$(docker ps -aq)
+  # Saving docker containers in a variable
+  CONTAINER_IDS=$(docker ps -aq)
+  # Checking if there are any containers or not
   if [ -z "$CONTAINER_IDS" -o "$CONTAINER_IDS" == " " ]; then
     echo "---- No containers available for deletion ----"
   else
+    # Removing docker containers by ID if it exist
     docker rm -f $CONTAINER_IDS
   fi
-
-    DOCKER_IMAGE_IDS=$(docker images | grep "dev\|none\|test-vp\|peer[0-9]-" | awk '{print $3}')
+  # Saving docker images in a variable
+  DOCKER_IMAGE_IDS=$(docker images | grep "dev\|none\|test-vp\|peer[0-9]-" | awk '{print $3}')
+  # Checking if Docker images exist
   if [ -z "$DOCKER_IMAGE_IDS" -o "$DOCKER_IMAGE_IDS" == " " ]; then
     echo "---- No images available for deletion ----"
   else
+    # Removing Docker images by ID if exist
     docker rmi -f $DOCKER_IMAGE_IDS
   fi
-    rm -f docker-compose-e2e.yaml
-    rm -r hfc-key-store 
+  # Remove docker-compose-e2e.yaml and clear the hfc-key-store
+  rm -f docker-compose-e2e.yaml
+  rm -r hfc-key-store 
   
 }
 
@@ -75,7 +84,7 @@ function replacePrivateKey () {
     OPTS="-i"
   fi
 
- 
+
   cp docker-compose-e2e-template.yaml docker-compose-e2e.yaml
 
 
@@ -89,7 +98,7 @@ function replacePrivateKey () {
     rm docker-compose-e2e.yamlt
   fi
 }
-
+# Generate certificates
 function generateCerts (){
   which cryptogen
   if [ "$?" -ne 0 ]; then
@@ -114,7 +123,7 @@ function generateCerts (){
   echo
 }
 
-
+# Generate channel artifacts
 function generateChannelArtifacts() {
   which configtxgen
   if [ "$?" -ne 0 ]; then
@@ -158,7 +167,7 @@ function generateChannelArtifacts() {
   fi
 
 
- }
+}
 
 # Obtain the OS and Architecture string that will be used to select the correct
 # native binaries for your platform
@@ -166,7 +175,7 @@ OS_ARCH=$(echo "$(uname -s|tr '[:upper:]' '[:lower:]'|sed 's/mingw64_nt.*/window
 
 # Parse commandline args
 if [ "$1" = "-m" ];then	
-    shift
+  shift
 fi
 MODE=$1;shift
 
@@ -175,10 +184,10 @@ MODE=$1;shift
 while getopts "h?m:" opt; do
   case "$opt" in
     h|\?)
-      printHelp
-      exit 0
-    ;;
-  esac
+printHelp
+exit 0
+;;
+esac
 done
 
 

@@ -231,7 +231,7 @@ var Chaincode = class {
     return Buffer.from(JSON.stringify(results));
   }
 
-
+  // Get all transactions for a spesfic family
   async getAllResults(iterator, isHistory) {
     let allResults = [];
     while (true) {
@@ -307,6 +307,7 @@ var Chaincode = class {
 
   }
 
+  // Query on orginzation 
   async searchByOrg(stub, args) {
     if (args.length != 1) {
       throw new Error('Incorrect number of arguments. Expecting name of the organization to query')
@@ -325,33 +326,32 @@ var Chaincode = class {
     return valueInBytes;
   }
 
-
+//**************************** User functinality ****************************
   
 
-  
-
+ // Register a username
   async registerUser(stub,args){
+
+  	// Assigning arguments value to variables
+  	let organization = args[0]
+  	let password = args[1]
+
+
+
+  	// Create user object
     let user = {
       docType: 'user',
-      organizationName: args[0],
-      password: args[1],
+      organizationName:organization,
+      password: password,
       amountOfDonations:0,
       numberOfDonations:0,
       amountofLastDonation:0,
       lastDonationDate:'date...' 
     }
-    await stub.putState('#' +args[0], Buffer.from(JSON.stringify(user)));
+    // Write the states to the ledger
+    await stub.putState('#' +organization, Buffer.from(JSON.stringify(user)));
   }
-  async queryUser(stub,args){
-   let user = await stub.getState(args[0]);
-   if (!user) {
-    jsonResp.error = 'Failed to get state for ' + args[0];
-    throw new Error(JSON.stringify(jsonResp));
-  }
-  return user
-
-}
-
+ 
 
 
 };
