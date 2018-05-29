@@ -74,11 +74,18 @@
       font-style: italic;
       margin: 70px 0;
   }
+  .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
 footer {
     background-color: #17503C;
     color: #f5f5f5;
     padding: 10px;
     margin-top:10px;
+
 }
 footer .glyphicon {
     font-size: 20px;

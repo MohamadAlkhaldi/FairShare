@@ -58,7 +58,8 @@ invokeWrap(){
     return (
       <Router>
       <HashRouter>
-          <div>
+      <div>
+          <div style={{marginBottom:'100px'}}>
 
           <nav className="navbar navbar-default navbar-fixed-top">
             <div className="container">
@@ -97,28 +98,31 @@ invokeWrap(){
           <Route path="/createAccount" component = {CreateAccount}/>   
           <Route path="/invoke" render = {this.invokeWrap}/>   
           <Route path="/query" render = {this.queryWrap}/>
-          <Route path="/queryGuest" component = {QueryGuest}/>   
+          <Route path="/queryGuest" component = {QueryGuest}/>
+            
 
-<div style={{ marginTop:'40px'}}>
-<footer >
-<div className="container-fluid">
-  <div className='row'>
-  <div className='col-sm-6 text-center' style={{ marginLeft:'10px'}}>
-  <a href="#" className="fa fa-facebook"></a>
-  <a href="#" className="fa fa-twitter"></a>
-  <a href="#" className="fa fa-google"></a>
-  <a href="#" className="fa fa-linkedin"></a>
-  <p > Copyrights Reserved &copy;</p>
-  </div>
-
-  <div className='col-sm-5'>
-  <button className='btn btn-primary btn-lg donateButton'>Donate</button>
-  </div>
-  </div>
-  </div>
-</footer>
-</div>
+          
         </div>
+        <div className='footer' style={{ marginTop:'40px'}}>
+          <footer >
+          <div className="container-fluid">
+            <div className='row'>
+            <div className='col-sm-6 text-center' style={{ marginLeft:'10px'}}>
+            <a href="#" className="fa fa-facebook"></a>
+            <a href="#" className="fa fa-twitter"></a>
+            <a href="#" className="fa fa-google"></a>
+            <a href="#" className="fa fa-linkedin"></a>
+            <p > Copyrights Reserved &copy;</p>
+            </div>
+
+            <div className='col-sm-5'>
+            <button className='btn btn-primary btn-lg donateButton'>Donate</button>
+            </div>
+            </div>
+            </div>
+          </footer>
+          </div>
+          </div>
         </HashRouter>
       </Router> 
     )
