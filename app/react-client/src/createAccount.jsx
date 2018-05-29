@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import {Redirect} from "react-router-dom";
 
 class CreateAccount extends React.Component {
   constructor(props) {
@@ -9,7 +10,8 @@ class CreateAccount extends React.Component {
     this.state = {
       username:'',
       password:'',
-      email:''
+      email:'',
+      mssg:false
     }
     this.onChange=this.onChange.bind(this);
     this.signUp=this.signUp.bind(this);
@@ -30,12 +32,14 @@ class CreateAccount extends React.Component {
       url: '/signUp',
       data:{username:this.state.username,password:this.state.password},
       success: () => {
-        //this.setState({redirect : true})
+
+        this.setState({mssg : true})
     }
 })
   }
 
    render () {
+     if(this.props.loggedIn){
     return (
      
       
@@ -55,6 +59,7 @@ class CreateAccount extends React.Component {
               <input type="password" className="form-control" id="pwd" placeholder="Enter password" name='password' onChange={this.onChange} />
             </div>
             <button className='btn btn-lg choiceButton' type="submit" onClick={this.signUp}><strong>Submit</strong></button>
+            {this.state.mssg ? <span className='mssg'>Account added!</span> : null}
       
           </form>
         </div>
@@ -63,7 +68,11 @@ class CreateAccount extends React.Component {
  
 
       )
+  } else{
+    return <Redirect to='/login'/>
+  }
    }
+  
 
 }
 export default CreateAccount;
