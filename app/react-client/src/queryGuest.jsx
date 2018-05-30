@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import List from './components/List.jsx';
 
 class QueryGuest extends React.Component {
   constructor(props) {
@@ -16,15 +15,17 @@ class QueryGuest extends React.Component {
   }
 
   onChange (e) {
+    e.preventDefault()
     this.setState({
     [e.target.name]: e.target.value });
   }
   
-  query(fcn,args) {
+  query(e) {
+    e.preventDefault()
     $.ajax({
       type:'POST',
       url: '/query',
-      data:{fcn:fcn,args:args}, 
+      data:{fcn:'searchByOrg',args:this.state.argsQuery}, 
       success: (data) => {
 
         console.log(data)
@@ -39,13 +40,14 @@ class QueryGuest extends React.Component {
     return (
       <div className='container-fluid animatedMove'>
       <center>
-      
+      <form>
       <div className="form-group f">
         <h3 style={{color:'#FF5733'}}><strong>Search For Organization</strong></h3>
         <input type="text" className="form-control" id="argsQuery" placeholder="Enter organization name" name='argsQuery' onChange={this.onChange} /> 
        </div>
         
-      <button className='btn btn-lg choiceButton' onClick={()=> this.query('searchByOrg',this.state.argsQuery)}><strong>Get</strong></button>
+      <button className='btn btn-lg choiceButton' type='submit' onClick={this.query}><strong>Get</strong></button>
+      </form>
       <br/>
       <div>{ this.state.info !== 'failed' && this.state.info !== ''?
       <div className="panel panel-success" style={{width:'400px'}}>

@@ -42,21 +42,6 @@ class Invoke extends React.Component {
         })
       }
     })
-    // $.ajax({
-    //   type:'POST',
-    //   url: '/query',
-    //  data:{fcn:'getFamilyInfo',args:famid}, 
-    //   success: (data) => {
-    //     console.log(data)
-    //   },
-    //   error: ()=> {
-    //     this.setState({
-    //       familyinfo:false
-    //     })
-    //   }
-    // })
-    // ;
-
 
   }
 
