@@ -11,7 +11,9 @@ class Invoke extends React.Component {
       ORG:"",
       FamilyID:"",
       Amount:"",
-      Date:""
+      Date:"",
+      familyinfo:true,
+      mssg:false
     }
     this.onChange=this.onChange.bind(this);
     this.invoke=this.invoke.bind(this);
@@ -26,18 +28,20 @@ class Invoke extends React.Component {
     
   }
   
- invoke(fcn,org,famid,amount,date) {
+ invoke(e) {
+  e.preventDefault()
     $.ajax({
       type:'POST',
       url: '/invoke',
-      data:{fcn:fcn,args:[famid,org,amount,date]}, 
+      data:{fcn:'newAid',args:[this.state.FamilyID,this.state.ORG,this.state.Amount,this.state.Date]}, 
       success: (data) => {
+        console.log('worked')
         this.setState({
-          items:data
+          items:data,
+          mssg:true
         })
       }
-    });
-
+    })
 
   }
 
@@ -51,22 +55,27 @@ class Invoke extends React.Component {
             <h3 style={{color:'#17503C' , fontFamily:'Merriweather'}}><strong>Add New Aid</strong></h3>
             <form>
               <div className="form-group">
-                <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Organization</label>
-                <input type="text" className="form-control" id="email" placeholder="Enter email" name='ORG' onChange={this.onChange} />
+                <label style={{color:'#FF5733', marginRight: '10px'}} for="Organization">Organization</label>
+                <input type="text" className="form-control" id="Organization" placeholder="Enter organization" name='ORG' onChange={this.onChange} />
               </div>
               <div className="form-group">
                 <label style={{color:'#FF5733', marginRight: '10px'}} for="pwd">FamilyID</label>
                 <input type="text" className="form-control" id="pwd" placeholder="Enter FamilyID" name='FamilyID' onChange={this.onChange} />
               </div>
               <div className="form-group">
-                <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Amount</label>
-                <input type="email" className="form-control" id="email" placeholder="Enter Amount" name='Amount' onChange={this.onChange} />
+                <label style={{color:'#FF5733', marginRight: '10px'}} for="Amount">Amount</label>
+                <input type="text" className="form-control" id="Amount" placeholder="Enter Amount" name='Amount' onChange={this.onChange} />
               </div>
               <div className="form-group">
-                <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Date</label>
-                <input type="date" className="form-control" id="email" placeholder="Enter email" name='Date' onChange={this.onChange} />
+                <label style={{color:'#FF5733', marginRight: '10px'}} for="Date">Date</label>
+                <input type="date" className="form-control" id="Date" placeholder="Enter Date" name='Date' onChange={this.onChange} />
               </div>
-              <button className='btn btn-lg choiceButton' type="submit" onClick={()=> this.invoke('newAid',this.state.ORG,this.state.FamilyID,this.state.Amount,this.state.Date)}><strong>Submit</strong></button>
+              <button className='btn btn-lg choiceButton' type="submit" onClick={this.invoke}><strong>Submit</strong></button>
+              {this.state.mssg ? <h3 className='mssg w3-animate-fading'>Aid added!</h3> : null}
+              
+              <div>
+              {!this.state.familyinfo ? <button className='btn btn-lg choiceButton' ><strong>This family's info is not available, update it here please!</strong></button> : null}
+              </div>
       
             </form>
             </center>

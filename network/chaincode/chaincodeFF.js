@@ -277,7 +277,7 @@ var Chaincode = class {
 
   // Updating organization's information 
   async updateOrg(stub, args) {
-    if (args.length != 1) {
+    if (args.length != 4) {
       throw new Error('Incorrect number of arguments. Expecting name of the organization')
     }
 
@@ -303,7 +303,7 @@ var Chaincode = class {
     org.lastDonationDate = date
 
     // Write the states back to the ledger
-    await stub.putState('#'+organization, Buffer.from(JSON.stringify(val)));
+    await stub.putState('#'+organization, Buffer.from(JSON.stringify(org)));
 
   }
 
@@ -318,7 +318,7 @@ var Chaincode = class {
     // Get the state of the originzation from the ledger
     let valueInBytes = await stub.getState(orgName);
     // Check if it exist
-    if (!Avalbytes) {
+    if (!valueInBytes) {
       // If not throw an error
       throw new Error('Failed to get state for ' + args[0]);
     }
@@ -327,10 +327,10 @@ var Chaincode = class {
   }
 
 //**************************** User functinality ****************************
-  
+
 
  // Register a username
-  async registerUser(stub,args){
+ async registerUser(stub,args){
 
   	// Assigning arguments value to variables
   	let organization = args[0]
@@ -351,7 +351,17 @@ var Chaincode = class {
     // Write the states to the ledger
     await stub.putState('#' +organization, Buffer.from(JSON.stringify(user)));
   }
- 
+
+  // Checking if user exist to log the user in 
+  async queryUser(stub,args){
+    let user = await stub.getState(args[0]);
+    if (!user) {
+     jsonResp.error = 'Failed to get state for ' + args[0];
+     throw new Error(JSON.stringify(jsonResp));
+   }
+   return user
+
+ }
 
 
 };

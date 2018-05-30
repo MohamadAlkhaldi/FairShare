@@ -20,7 +20,7 @@ class Query extends React.Component {
 
     super(props);
     this.state = {
-      items: {amount: "500", date: "2018-05-09", docType: "aid", familyId: "a", organization: "1"},
+      items: {},
       argsQuery:""
       }
     this.onChange=this.onChange.bind(this);
@@ -42,6 +42,7 @@ class Query extends React.Component {
         this.setState({
           items:data
         })
+        
         // if(!Array.isArray(data) && data.TxId){
         //   this.setState({
         //     items:[{Value:data}]
@@ -71,6 +72,7 @@ class Query extends React.Component {
       <br/>
       <button className='btn btn-lg choiceButton' onClick={()=> this.query('getFamilyInfo',this.state.argsQuery)}><strong>Get family info</strong></button>
       <br/>
+      {this.state.items === 'failed' || this.state.items.length === 0 ? <h3 className='mssgErr w3-animate-zoom'>No such family</h3> : null}
       
       <div>{ this.state.items.rent !== undefined ?
         <div className="panel panel-success" style={{width:'400px'}}>

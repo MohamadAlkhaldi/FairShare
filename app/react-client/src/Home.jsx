@@ -31,7 +31,7 @@ render () {
         </div>
       </div>
       
-      <div className="container-fluid greyB" style={{padding:'5%'}}>
+      <div className="container-fluid greyB" style={{padding:'5%', backgroundColor:'#C7CBCA'}}>
         <div className="row" style={{paddingLeft:'7%'}}>
           <div className="col-sm-4">
             <span className="glyphicon glyphicon-link logoI"></span>
@@ -81,7 +81,7 @@ render () {
     </div>
     </div>
 
-    <div className="container-fluid greyB text-center" style={{padding:'5%'}}>
+    <div className="container-fluid greyB text-center" style={{padding:'5%', backgroundColor:'#C7CBCA'}}>
             
         <h2 style={{ color:'#FF5733', fontFamily:'Merriweather'}}  >JOIN EXCELLENCE!</h2>
         <h4>blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla blabla bla blablabla</h4>
@@ -98,7 +98,7 @@ render () {
 
     <div className="carousel-inner" role="listbox">
       <div className="item active">
-        <img src="https://cdn.pixabay.com/photo/2012/12/20/10/12/michelangelo-71282_1280.jpg" alt="New York" style={{width:'100%'}}/>
+        <img src="https://cdn.psychologytoday.com/sites/default/files/field_blog_entry_images/IMAGE%20stillbirth%20coping.jpg" alt="New York" style={{width:'100%'}}/>
         <div className="carousel-caption">
           <h3>blabla blabla</h3>
           <p>blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla</p>
@@ -131,13 +131,6 @@ render () {
       <span className="sr-only">Next</span>
     </a>
     </div>
-
-
-    <div className="text-center" >
-      <a className="up-arrow " style={{color:'#FF5733'}} href="#" data-toggle="tooltip" title="TO TOP">
-        <span className="glyphicon glyphicon-chevron-up"></span>
-      </a>
-      </div>
          </div>
 
       )

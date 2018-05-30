@@ -67,6 +67,7 @@ var query = function (req, res) {
 	}
 }).catch((err) => {
 	console.error('Failed to query successfully :: ' + err);
+	res.send('failed')
 });
 }
 
@@ -157,6 +158,7 @@ var signUp = function(req,res){
 				} else {
 					console.log('The transaction has been committed on peer ' + event_hub._ep._endpoint.addr);
 					resolve(return_status);
+					res.send('success')
 				}
 			}, (err) => {
 				//this is the callback if something goes wrong with the event registration or processing
@@ -268,6 +270,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 				} else {
 					console.log('The transaction has been committed on peer ' + event_hub._ep._endpoint.addr);
 					resolve(return_status);
+					res.send('success')
 				}
 			}, (err) => {
 				//this is the callback if something goes wrong with the event registration or processing

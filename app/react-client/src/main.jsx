@@ -9,11 +9,7 @@ import Home from './Home.jsx';
 import CreateAccount from './createAccount.jsx';
 import Invoke from './invoke.jsx';
 import Query from './query.jsx';
-
 import QueryGuest from './queryGuest.jsx';
-
-
-
 
 class Main extends React.Component {
 constructor(props) {
@@ -29,6 +25,7 @@ super(props);
        this.appWrap=this.appWrap.bind(this);
        this.queryWrap=this.queryWrap.bind(this);
        this.invokeWrap=this.invokeWrap.bind(this);
+       this.createWrap=this.createWrap.bind(this);
 }
 
 changeUser(name){
@@ -53,12 +50,16 @@ queryWrap(){
 invokeWrap(){
   return <Invoke loggedIn={this.state.loggedIn}/>
 }
+createWrap(){
+  return <CreateAccount loggedIn={this.state.loggedIn}/>
+}
 // <h1 style={{'textAlign':'center','fontSize':'300%','fontFamily':'Arial'}} > Fair Share </h1>
   render () {
     return (
       <Router>
       <HashRouter>
-          <div>
+      <div>
+          <div style={{marginBottom:'100px'}}>
 
           <nav className="navbar navbar-default navbar-fixed-top">
             <div className="container">
@@ -94,31 +95,34 @@ invokeWrap(){
           <Route path="/app" render={this.appWrap}/>  
           <Route path="/login" exact render={this.signWrap}/> 
           <Route path="/" exact strict component={Home}/> 
-          <Route path="/createAccount" component = {CreateAccount}/>   
+          <Route path="/createAccount" render = {this.createWrap}/>   
           <Route path="/invoke" render = {this.invokeWrap}/>   
           <Route path="/query" render = {this.queryWrap}/>
-          <Route path="/queryGuest" component = {QueryGuest}/>   
+          <Route path="/queryGuest" component = {QueryGuest}/>
+            
 
-<div style={{ marginTop:'40px'}}>
-<footer >
-<div className="container-fluid">
-  <div className='row'>
-  <div className='col-sm-6 text-center' style={{ marginLeft:'10px'}}>
-  <a href="#" className="fa fa-facebook"></a>
-  <a href="#" className="fa fa-twitter"></a>
-  <a href="#" className="fa fa-google"></a>
-  <a href="#" className="fa fa-linkedin"></a>
-  <p > Copyrights Reserved &copy;</p>
-  </div>
-
-  <div className='col-sm-5'>
-  <button className='btn btn-primary btn-lg donateButton'>Donate</button>
-  </div>
-  </div>
-  </div>
-</footer>
-</div>
+          
         </div>
+        <div className='footer' style={{ marginTop:'40px'}}>
+          <footer >
+          <div className="container-fluid">
+            <div className='row'>
+            <div className='col-sm-6 text-center' style={{ marginLeft:'10px'}}>
+            <a href="#" className="fa fa-facebook"></a>
+            <a href="#" className="fa fa-twitter"></a>
+            <a href="#" className="fa fa-google"></a>
+            <a href="#" className="fa fa-linkedin"></a>
+            <p > Copyrights Reserved &copy;</p>
+            </div>
+
+            <div className='col-sm-5'>
+            <button className='btn btn-primary btn-lg donateButton'>Donate</button>
+            </div>
+            </div>
+            </div>
+          </footer>
+          </div>
+          </div>
         </HashRouter>
       </Router> 
     )

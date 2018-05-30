@@ -17,6 +17,7 @@ super(props);
 
     }
         this.onChange=this.onChange.bind(this);
+        this.logIn=this.logIn.bind(this);
 
 }
 
@@ -31,12 +32,14 @@ onChange (e) {
     
   }
 
-  logIn(username,password) {
+  logIn(e) {
+    e.preventDefault();
     $.ajax({
       type:'POST',
       url: '/login',
-      data:{username:username,password:password},
+      data:{username:this.state.username,password:this.state.password},
       success: () => {
+        console.log("I'm here")
         this.props.changeLoggedIn(true)
     }
 })
@@ -51,21 +54,21 @@ render () {
     return (
      
       
-      <div >
+      <div>
       
      
 
       <div className="container animatedMove" style={{ marginTop: '30px'}}>
-          <form className="form-inline" >
+          <form className="form-inline"  onSubmit={this.logIn}>
             <div className="form-group">
-              <label style={{color:'#FF5733', marginRight: '10px'}} for="email">Username</label>
-              <input type="email" className="form-control" id="email" placeholder="Enter email" name='username' onChange={this.onChange} />
+              <label style={{color:'#FF5733', marginRight: '10px'}} htmlFor="username">Username</label>
+              <input type="text" className="form-control" id="username" placeholder="Enter email" name='username' onChange={this.onChange} />
             </div>
             <div className="form-group">
-              <label style={{color:'#FF5733', marginRight: '10px'}} for="pwd">Password</label>
+              <label style={{color:'#FF5733', marginRight: '10px'}} htmlFor="pwd">Password</label>
               <input type="password" className="form-control" id="pwd" placeholder="Enter password" name='password' onChange={this.onChange} />
             </div>
-            <button onClick={()=> this.logIn(this.state.username,this.state.password)} type="submit" className="login-button"><i className="glyphicon glyphicon-chevron-right"></i></button>
+            <button type="submit" className="login-button"><i className="glyphicon glyphicon-chevron-right"></i></button>
           </form>
         </div>
 
