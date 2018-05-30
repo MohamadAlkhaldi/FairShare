@@ -17,7 +17,7 @@ channel.addPeer(peer1);
 var order = fabric_client.newOrderer('grpc://localhost:7050')
 channel.addOrderer(order);
 
-//
+
 var member_user = null;
 var store_path = path.join(__dirname, '../network/hfc-key-store');
 console.log('Store path:'+store_path);
@@ -66,8 +66,8 @@ var query = function (req, res) {
 		console.log("No payloads were returned from query");
 	}
 }).catch((err) => {
-	res.send('failed')
 	console.error('Failed to query successfully :: ' + err);
+	res.send('failed')
 });
 }
 
@@ -157,8 +157,8 @@ var signUp = function(req,res){
 					resolve(return_status); // we could use reject(new Error('Problem with the tranaction, event status ::'+code));
 				} else {
 					console.log('The transaction has been committed on peer ' + event_hub._ep._endpoint.addr);
-					res.send('success')
 					resolve(return_status);
+					res.send('success')
 				}
 			}, (err) => {
 				//this is the callback if something goes wrong with the event registration or processing
@@ -268,9 +268,9 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 					console.error('The transaction was invalid, code = ' + code);
 					resolve(return_status); // we could use reject(new Error('Problem with the tranaction, event status ::'+code));
 				} else {
-					res.send('success')
 					console.log('The transaction has been committed on peer ' + event_hub._ep._endpoint.addr);
 					resolve(return_status);
+					res.send('success')
 				}
 			}, (err) => {
 				//this is the callback if something goes wrong with the event registration or processing

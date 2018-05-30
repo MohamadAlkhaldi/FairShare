@@ -13,17 +13,17 @@ var Chaincode = class {
       return shim.error('Incorrect number of arguments. Expecting 4');
     }
     let aid = {
-        docType : 'aid',
-        familyId : 'a',
-        amount : 100,
-        organization : 'organization'
-      }
-      let aid1 = {
-        docType : 'aid',
-        familyId : 'b',
-        amount : 200,
-        organization : "organization1"
-      }
+      docType : 'aid',
+      familyId : 'a',
+      amount : 100,
+      organization : 'organization'
+    }
+    let aid1 = {
+      docType : 'aid',
+      familyId : 'b',
+      amount : 200,
+      organization : "organization1"
+    }
     let A = args[0];
     let B = args[2];
     let Aval = aid;
@@ -43,86 +43,81 @@ var Chaincode = class {
 
   async Invoke(stub) {
     let ret = stub.getFunctionAndParameters();
-    console.info(ret);
     let method = this[ret.fcn];
     if (!method) {
-      console.log('no method of name:' + ret.fcn + ' found');
       return shim.success();
     }
     try {
       let payload = await method(stub, ret.params, this);
       return shim.success(payload);
     } catch (err) {
-      console.log(err);
       return shim.error(err);
     }
   }
 
-  async newAid(stub, args ,that) {
-   
-    //Checking if family exists and creting an entry if it doesnt 
-    let method = that['checkFamily'];
-    await method(stub, args,that);
-
-    //Adding aid to family 
-    let method1 = that['addAid'];
-    await method1(stub, args,that);
-
-    //Updating Orginization informations
-    let method2 = that['updateOrg'];
-    await method2(stub, args,that);
-
   
 
-  }
 
+//**************************** Family functinality **************************** 
+
+
+  // Checking if family entry exists and if not it will create it  
   async checkFamily(stub, args) {
-
-    //Get args value
+    if (args.length != 4) {
+      return shim.error('Incorrect number of arguments. Expecting 4');
+    }
+    // Get args value
     let id = args[0];
     let organization = args[1];
     let amount = args[2]
     let date = args[3]
 
 
+    // Get the state of the family from the ledger
+    let valueInBytes = await stub.getState(id);
     //checking if family exists
-    let valuebytes = await stub.getState(id);
-    if (valuebytes.toString() === "") {
+    if (valueInBytes.toString() === "") {
+      //Create familyInfo object with default values
       let familyInfo = {
         familyId : id,
-        income : 'undefined',
-        rent : 'undefined',
-        address : 'undefined',
-        familyMembers: 'undefined',
+        income : 'to be changed',
+        rent : 'to be changed',
+        address : 'to be changed',
+        familyMembers: 'to be changed',
         date: date
       }
 
+      // Write the states back to the ledger
       await stub.putState('?'+id, Buffer.from(JSON.stringify(familyInfo)));
     }
   }
 
+  // Get information about a spesfic family
   async getFamilyInfo(stub, args) {
     if (args.length != 1) {
-      throw new Error('Incorrect number of arguments. Expecting name of the family to query')
+      throw new Error('Incorrect number of arguments. Expecting the family id to query')
     } 
-
+    // Assigning argument value  to variable
     let orgName =  '?' + args[0];
 
-    // Get the state from the ledger
-    let Avalbytes = await stub.getState(orgName);
-    if (!Avalbytes) {
+    // Get the state of the organization from the ledger
+    let valueInBytes = await stub.getState(orgName);
+    // If doesnt exist throw an error
+    if (!valueInBytes) {
       throw new Error(JSON.stringify('Failed to get state for ' + args[0]));
     }
-
-    return Avalbytes;
+    // Get back the value if it exist and return it
+    return valueInBytes;
   }
 
+
+  // Update the information for a spesfic family
   async updateFamily(stub, args) {
     if (args.length != 1) {
       throw new Error('Incorrect number of arguments. Expecting 6 arguments')
     } 
 
-    //Get args value
+    // Assigning arguments value to variables
     let familyId = args[0];
     let income = args[1];
     let rent = args[2];
@@ -130,114 +125,113 @@ var Chaincode = class {
     let familyMembers = args[4];
     let date = args[5];
 
-    let valbytes = await stub.getState('?'+familyId);
-    if (!valbytes) {
+    // 
+    let valueInBytes = await stub.getState('?'+familyId);
+    if (!valueInBytes) {
       throw new Error('Failed to get state of family' + familyId);
     }
-    let val =JSON.parse(valbytes.toString());
+    let family =JSON.parse(valueInBytes.toString());
     
-    val.income = income 
-    val.rent = rent
-    val.address = address
-    val.familyMembers = familyMembers
-    val.date = date
+    family.income = income 
+    family.rent = rent
+    family.address = address
+    family.familyMembers = familyMembers
+    family.date = date
 
     // Write the states back to the ledger
     await stub.putState('?'+familyId, Buffer.from(JSON.stringify(val)));
 
   }
 
-  async addAid(stub, args) {
-    if (args.length != 4) {
-      throw new Error('Incorrect number of arguments. Expecting 4');
-    }
 
-    //Get args value
+//**************************** Aid functinality ****************************
+
+
+  // Adding a new transaction to the ledger
+  async newAid(stub, args ,that) {
+
+    // Checking if family exists and creting an entry if it doesnt 
+    let method = that['checkFamily'];
+    await method(stub, args,that);
+
+    // Adding aid to family 
+    let method1 = that['addAid'];
+    await method1(stub, args,that);
+
+    // Updating Orginization's informations
+    let method2 = that['updateOrg'];
+    await method2(stub, args,that);
+
+
+
+  }
+
+ // Adding the transaction to the ledger
+ async addAid(stub, args) {
+  if (args.length != 4) {
+    throw new Error('Incorrect number of arguments. Expecting 4');
+  }
+
+    // Assigning arguments value to variables
     let id = args[0];
     let organization = args[1];
     let amount = args[2]
     let date = args[3]
 
-    //create aid object
+    //create an aid object
     let aid = {
-    docType : 'aid',
-    familyId : id,
-    amount : amount,
-    organization : args[1],
-    date: date
-  }
-  
+      docType : 'Aid',
+      familyId : id,
+      amount : amount,
+      organization : organization,
+      date: date
+    }
+
     // Write the states to the ledger
     await stub.putState(id, Buffer.from(JSON.stringify(aid)));
   }
 
+
+
+  // Get the last transaction for a spesfic family
   async lastAid(stub, args) {
     if (args.length != 1) {
       throw new Error('Incorrect number of arguments. Expecting name of the person to query')
     }
 
-    let jsonResp = {};
+    // Assigning arguments value to variable
     let familyId = args[0];
 
-    // Get the state from the ledger
-    let Avalbytes = await stub.getState(familyId);
-    if (!Avalbytes) {
-      jsonResp.error = 'Failed to get state for ' + familyId;
-      throw new Error(JSON.stringify(jsonResp));
+    // Get the state for the family from the ledger
+    let valueInBytes = await stub.getState(familyId);
+    // Check if it exist
+    if (!valueInBytes) {
+      // If doesn't exist throw and error
+      throw new Error(JSON.stringify('Failed to get state for ' + familyId));
     }
 
-    //to be removed
-    jsonResp.name = familyId;
-    jsonResp.amount = Avalbytes.toString();
-    console.info('Query Response:');
-    console.info(jsonResp);
-    //
-    return Avalbytes;
+    // If exist Get back the value and return it
+    return valueInBytes;
   }
   
- //Organization 
-
-  async updateOrg(stub, args) {
-    let id = args[0];
-    let organization = args[1];
-    let amount = args[2]
-    let date = args[3]
-
-    let valbytes = await stub.getState('#'+organization);
-    if (!valbytes) {
-      throw new Error('Failed to get state of organization' + organization);
+  // Get transaction history for a spesfic family 
+  async aidHistory(stub, args, that) {
+    if (args.length < 1) {
+      throw new Error('Incorrect number of arguments. Expecting 1')
     }
-    let val =JSON.parse(valbytes.toString());
+    // Assigning arguments value to variable
+    let familyId = args[0];
+    // Get the state for the family from the ledger and save it in a variable 
+    let resultsIterator = await stub.getHistoryForKey(familyId);
+    // Getting all the transactions to a spesfic family and saving in a variable
+    let method = that['getAllResults'];
+    let results = await method(resultsIterator, true);
 
-    val.amountOfDonations = val.amountOfDonations * 1 + amount * 1 
-    val.numberOfDonations += 1
-    val.amountofLastDonation = amount
-    val.lastDonationDate = date
-
-    // Write the states back to the ledger
-    await stub.putState('#'+organization, Buffer.from(JSON.stringify(val)));
-
+    // Return back the transaction history
+    return Buffer.from(JSON.stringify(results));
   }
 
-  async searchByOrg(stub, args) {
-    if (args.length != 1) {
-      throw new Error('Incorrect number of arguments. Expecting name of the organization to query')
-    }
-
-    let jsonResp = {};
-    let orgName =  '#' + args[0];
-
-    // Get the state from the ledger
-    let Avalbytes = await stub.getState(orgName);
-    if (!Avalbytes) {
-      jsonResp.error = 'Failed to get state for ' + args[0];
-      throw new Error(JSON.stringify(jsonResp));
-    }
-
-    return Avalbytes;
-  }
-
-
+  // Get all transactions for a spesfic family
   async getAllResults(iterator, isHistory) {
     let allResults = [];
     while (true) {
@@ -277,42 +271,97 @@ var Chaincode = class {
     }
   }
 
-  async aidHistory(stub, args, that) {
-    if (args.length < 1) {
-      throw new Error('Incorrect number of arguments. Expecting 1')
+
+
+//**************************** organization functinality ****************************
+
+  // Updating organization's information 
+  async updateOrg(stub, args) {
+    if (args.length != 4) {
+      throw new Error('Incorrect number of arguments. Expecting name of the organization')
     }
-    let familyId = args[0];
-    console.info('- start getHistoryForFamily: %s\n', familyId);
 
-    let resultsIterator = await stub.getHistoryForKey(familyId);
-    let method = that['getAllResults'];
-    let results = await method(resultsIterator, true);
+    // Assigning arguments value to variables
+    let id = args[0];
+    let organization = args[1];
+    let amount = args[2]
+    let date = args[3]
 
-    return Buffer.from(JSON.stringify(results));
+    // Get the state for the organization from the ledger 
+    let valueInBytes = await stub.getState('#'+organization);
+    // Check if it exist
+    if (!valueInBytes) {
+      // If doesn't exist throw an error 
+      throw new Error('Failed to get state of organization' + organization);
+    }
+    // Getting the organization's information
+    let org =JSON.parse(valueInBytes.toString());
+    // changing the values of the object
+    org.amountOfDonations = org.amountOfDonations * 1 + amount * 1 
+    org.numberOfDonations += 1
+    org.amountofLastDonation = amount
+    org.lastDonationDate = date
+
+    // Write the states back to the ledger
+    await stub.putState('#'+organization, Buffer.from(JSON.stringify(org)));
+
   }
 
-  async registerUser(stub,args){
+  // Query on orginzation 
+  async searchByOrg(stub, args) {
+    if (args.length != 1) {
+      throw new Error('Incorrect number of arguments. Expecting name of the organization to query')
+    }
+    // Assigning arguments value to variables
+    let orgName =  '#' + args[0];
+
+    // Get the state of the originzation from the ledger
+    let valueInBytes = await stub.getState(orgName);
+    // Check if it exist
+    if (!valueInBytes) {
+      // If not throw an error
+      throw new Error('Failed to get state for ' + args[0]);
+    }
+    // Get back the state of the orginization  and returning it 
+    return valueInBytes;
+  }
+
+//**************************** User functinality ****************************
+
+
+ // Register a username
+ async registerUser(stub,args){
+
+  	// Assigning arguments value to variables
+  	let organization = args[0]
+  	let password = args[1]
+
+
+
+  	// Create user object
     let user = {
       docType: 'user',
-      organizationName: args[0],
-      password: args[1],
+      organizationName:organization,
+      password: password,
       amountOfDonations:0,
       numberOfDonations:0,
       amountofLastDonation:0,
       lastDonationDate:'date...' 
     }
-    await stub.putState('#' +args[0], Buffer.from(JSON.stringify(user)));
+    // Write the states to the ledger
+    await stub.putState('#' +organization, Buffer.from(JSON.stringify(user)));
   }
+
+  // Checking if user exist to log the user in 
   async queryUser(stub,args){
-   let user = await stub.getState(args[0]);
-   if (!user) {
-    jsonResp.error = 'Failed to get state for ' + args[0];
-    throw new Error(JSON.stringify(jsonResp));
-  }
-  return user
+    let user = await stub.getState(args[0]);
+    if (!user) {
+     jsonResp.error = 'Failed to get state for ' + args[0];
+     throw new Error(JSON.stringify(jsonResp));
+   }
+   return user
 
-}
-
+ }
 
 
 };
