@@ -17,7 +17,7 @@ channel.addPeer(peer1);
 var order = fabric_client.newOrderer('grpc://localhost:7050')
 channel.addOrderer(order);
 
-//
+
 var member_user = null;
 var store_path = path.join(__dirname, '../network/hfc-key-store');
 console.log('Store path:'+store_path);

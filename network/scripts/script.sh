@@ -7,8 +7,6 @@ echo "\___ \    | |     / _ \   | |_) |   | |  "
 echo " ___) |   | |    / ___ \  |  _ <    | |  "
 echo "|____/    |_|   /_/   \_\ |_| \_\   |_|  "
 echo
-echo " end-to-end test"
-echo
 CHANNEL_NAME="$1"
 DELAY="$2"
 LANGUAGE="$3"
@@ -20,8 +18,8 @@ TIMEOUT="$4"
 LANGUAGE=`echo "$LANGUAGE" | tr [:upper:] [:lower:]`
 COUNTER=1
 MAX_RETRY=5
-ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 
+ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 CC_SRC_PATH="/opt/gopath/src/github.com/chaincode/"
 
 
@@ -30,10 +28,12 @@ echo "Channel name : "$CHANNEL_NAME
 # import utils
 . scripts/utils.sh
 
+# Creating channale
 createChannel() {
+	# Setting peer env
 	setGlobals 0 1
 
-
+		# Creating the channale using the peer
 		peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx >&log.txt
 	
 	cat log.txt
@@ -41,9 +41,11 @@ createChannel() {
 	echo
 }
 
+# Join the channale with peers
 joinChannel () {
 	for org in 1; do
 	    for peer in 0 1; do
+	    # join channale with both peers
 		joinChannelWithRetry $peer $org
 		echo "===================== peer${peer}.org${org} joined on the channel \"$CHANNEL_NAME\" ===================== "
 		sleep $DELAY
