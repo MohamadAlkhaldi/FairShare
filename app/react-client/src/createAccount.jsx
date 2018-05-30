@@ -59,7 +59,7 @@ class CreateAccount extends React.Component {
               <input type="password" className="form-control" id="pwd" placeholder="Enter password" name='password' onChange={this.onChange} />
             </div>
             <button className='btn btn-lg choiceButton' type="submit" onClick={this.signUp}><strong>Submit</strong></button>
-            {this.state.mssg ? <span className='mssg'>Account added!</span> : null}
+            {this.state.mssg ? <h3 className="mssg w3-animate-fading">Account added!</h3> : null}
       
           </form>
         </div>

@@ -91,9 +91,9 @@ class App extends React.Component {
       <center>
       <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/createAccount')}><strong>Create Account</strong></button>
       <br/>
-      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/query')}><strong>Query</strong></button>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/query')}><strong>Search</strong></button>
       <br/>
-      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/invoke')}><strong>Invoke</strong></button>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/invoke')}><strong>Add New Aid</strong></button>
       <br/>
       </center>
       </div>
@@ -101,9 +101,9 @@ class App extends React.Component {
         return (
       <div className='container-fluid animatedMove' style={{ marginTop: '30px'}}>
       <center>
-      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/query')}><strong>Query</strong></button>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/query')}><strong>Search Family</strong></button>
       <br/>
-      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/invoke')}><strong>Invoke</strong></button>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/invoke')}><strong>Add New Aid</strong></button>
       </center>
       </div>
       )

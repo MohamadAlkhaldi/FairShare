@@ -59,7 +59,7 @@ render () {
      
 
       <div className="container animatedMove" style={{ marginTop: '30px'}}>
-          <form className="form-inline" >
+          <form className="form-inline"  onSubmit={this.logIn}>
             <div className="form-group">
               <label style={{color:'#FF5733', marginRight: '10px'}} htmlFor="username">Username</label>
               <input type="text" className="form-control" id="username" placeholder="Enter email" name='username' onChange={this.onChange} />
@@ -68,7 +68,7 @@ render () {
               <label style={{color:'#FF5733', marginRight: '10px'}} htmlFor="pwd">Password</label>
               <input type="password" className="form-control" id="pwd" placeholder="Enter password" name='password' onChange={this.onChange} />
             </div>
-            <button onClick={this.logIn} type="submit" className="login-button"><i className="glyphicon glyphicon-chevron-right"></i></button>
+            <button type="submit" className="login-button"><i className="glyphicon glyphicon-chevron-right"></i></button>
           </form>
         </div>
 
