@@ -1,22 +1,29 @@
-
-
 version: '2'
 
 networks:
+  # Network name
   network:
 
 services:
+  # Service name
   couchdb0:
+    # Container name
     container_name: couchdb0
+    # Docker image for couchdb  
     image: hyperledger/fabric-couchdb
+    # Setting environment , to accsess couchdb
     environment:
       - COUCHDB_USER=
       - COUCHDB_PASSWORD=
+    # Couchdb Port
     ports:
       - "5984:5984"
     networks:
+      # Network name
       - network
 
+      
+  # Connecting the peer with couchdb    
   peer0.org1.example.com:
     environment:
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
@@ -25,18 +32,27 @@ services:
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
     depends_on:
       - couchdb0
+     
+
 
   couchdb1:
+    # Container name
     container_name: couchdb1
+    # Docker image for couchdb
     image: hyperledger/fabric-couchdb
+    # Setting environment , to accsess couchdb
     environment:
       - COUCHDB_USER=
       - COUCHDB_PASSWORD=
+    # Couchdb Port
     ports:
       - "6984:5984"
     networks:
+      # Network name
       - network
 
+
+  # Connecting the peer with couchdb    
   peer1.org1.example.com:
     environment:
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB

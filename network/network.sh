@@ -42,8 +42,8 @@ function networkUp () {
     exit 1
   fi
   cd ../app
-  node enrollAdmin.js
-  node registerUser.js
+  node enrollment.js
+
 }
 
 # Stopping and deleting the network
