@@ -35,15 +35,26 @@ class Invoke extends React.Component {
       url: '/invoke',
       data:{fcn:'newAid',args:[this.state.FamilyID,this.state.ORG,this.state.Amount,this.state.Date]}, 
       success: (data) => {
-        console.log('worked')
+        console.log(data)
         this.setState({
-          items:data,
           mssg:true
         })
       }
     })
-
+    
+    $.ajax({
+      type:'POST',
+      url: '/query',
+      data:{fcn:'getFamilyInfo',args:this.state.FamilyID}, 
+      success: (data) => {
+        console.log(data)
+        this.setState({
+          familyinfo:false
+        })
+      }
+    });
   }
+
 
    render () {
     if(this.props.loggedIn){
@@ -74,7 +85,7 @@ class Invoke extends React.Component {
               {this.state.mssg ? <h3 className='mssg w3-animate-fading'>Aid added!</h3> : null}
               
               <div>
-              {!this.state.familyinfo ? <button className='btn btn-lg choiceButton' ><strong>This family's info is not available, update it here please!</strong></button> : null}
+              {!this.state.familyinfo ? <a className='btn btn-lg choiceButton' href='#/familyInfo'><strong>This family's info is not available, update it here please!</strong></a> : null}
               </div>
       
             </form>

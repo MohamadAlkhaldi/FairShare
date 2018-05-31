@@ -10,6 +10,7 @@ import CreateAccount from './createAccount.jsx';
 import Invoke from './invoke.jsx';
 import Query from './query.jsx';
 import QueryGuest from './queryGuest.jsx';
+import FamilyInfo from './FamilyInfo.jsx';
 
 class Main extends React.Component {
 constructor(props) {
@@ -26,6 +27,8 @@ super(props);
        this.queryWrap=this.queryWrap.bind(this);
        this.invokeWrap=this.invokeWrap.bind(this);
        this.createWrap=this.createWrap.bind(this);
+
+       this.familyWrap=this.familyWrap.bind(this);
 }
 
 changeUser(name){
@@ -52,6 +55,9 @@ invokeWrap(){
 }
 createWrap(){
   return <CreateAccount loggedIn={this.state.loggedIn}/>
+}
+familyWrap(){
+  return <FamilyInfo loggedIn={this.state.loggedIn}/>
 }
 // <h1 style={{'textAlign':'center','fontSize':'300%','fontFamily':'Arial'}} > Fair Share </h1>
   render () {
@@ -99,6 +105,7 @@ createWrap(){
           <Route path="/invoke" render = {this.invokeWrap}/>   
           <Route path="/query" render = {this.queryWrap}/>
           <Route path="/queryGuest" component = {QueryGuest}/>
+          <Route path="/familyInfo" render = {this.familyWrap}/>
             
 
           
