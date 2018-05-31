@@ -13,11 +13,12 @@ class Invoke extends React.Component {
       Amount:"",
       Date:"",
       familyinfo:true,
+      Document: '',
       mssg:false
     }
     this.onChange=this.onChange.bind(this);
     this.invoke=this.invoke.bind(this);
-
+    this.uploadDocument=this.uploadDocument.bind(this);
   }
 
   onChange (e) {
@@ -33,7 +34,7 @@ class Invoke extends React.Component {
     $.ajax({
       type:'POST',
       url: '/invoke',
-      data:{fcn:'newAid',args:[this.state.FamilyID,this.state.ORG,this.state.Amount,this.state.Date]}, 
+      data:{fcn:'newAid',args:[this.state.FamilyID,this.state.ORG,this.state.Amount,this.state.Date,this.state.Document]}, 
       success: (data) => {
         console.log('worked')
         this.setState({
@@ -44,6 +45,18 @@ class Invoke extends React.Component {
     })
 
   }
+
+ uploadDocument (Doc) {
+    var that=this;
+    var file = Doc.target.files[0]
+    var fileReader = new FileReader()
+    fileReader.readAsDataURL(file)
+    fileReader.onload = function (e) {
+       that.setState({
+        Document: e.target.result }) 
+       console.log("zzzzz",that.state.Document)
+  }
+}
 
    render () {
     if(this.props.loggedIn){
@@ -69,6 +82,10 @@ class Invoke extends React.Component {
               <div className="form-group">
                 <label style={{color:'#FF5733', marginRight: '10px'}} for="Date">Date</label>
                 <input type="date" className="form-control" id="Date" placeholder="Enter Date" name='Date' onChange={this.onChange} />
+              </div>
+              <div className="form-group">
+                <label style={{color:'#FF5733', marginRight: '10px'}} for="Document">Add a proof</label>
+                <input type='file' name='Document' id='Document' onChange={this.uploadDocument} />
               </div>
               <button className='btn btn-lg choiceButton' type="submit" onClick={this.invoke}><strong>Submit</strong></button>
               {this.state.mssg ? <h3 className='mssg w3-animate-fading'>Aid added!</h3> : null}

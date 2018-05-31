@@ -17,6 +17,7 @@ class List extends React.Component {
 			      <th scope="col">Orgnaization</th>
 			      <th scope="col">Amount</th>
 			      <th scope="col">Date</th>
+			      <th scope="col">Proof</th>
 			    </tr>
 			  </thead>
 			  {Array.isArray(this.props.items) ?
