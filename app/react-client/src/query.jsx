@@ -63,7 +63,7 @@ class Query extends React.Component {
       
       <div className="form-group ">
         <h3 style={{color:'#FF5733', fontFamily:'Merriweather'}}><strong>Search</strong></h3>
-        <input type="text" className="form-control" id="argsQuery" placeholder="Enter family ID or organization name" name='argsQuery' onChange={this.onChange} /> 
+        <input type="text" className="form-control" id="argsQuery" placeholder="Enter family ID" name='argsQuery' onChange={this.onChange} /> 
        </div>
         
       <button className='btn btn-lg choiceButton' onClick={()=> this.query('lastAid',this.state.argsQuery)}><strong>Get the last aid info</strong></button>
