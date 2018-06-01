@@ -8,6 +8,8 @@ var bcrypt = require('bcrypt');
 
 
 
+
+
 var fabric_client = new Fabric_Client();
 var blockchainUser = 'user1';
 // setting up the network
@@ -87,6 +89,8 @@ var signUp = function(req,res,hash){
 	// get a transaction id object based on the current user assigned to fabric client
 	tx_id = fabric_client.newTransactionID();
 	console.log("Assigning transaction_id: ", tx_id._transaction_id);
+  
+   
 
 	// must send the proposal to endorsing peers
 	console.log('hash',hash)
@@ -331,6 +335,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 			console.log("Response is ", query_responses[0].toString())
 			console.log('hiiiii', typeof JSON.parse(query_responses[0].toString()))
 			
+
 		bcrypt.compare(password,JSON.parse(query_responses[0].toString()).password, function(err, isMatch) {
     		if (err) return 'error';
 			if(isMatch){
@@ -341,6 +346,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 					res.sendStatus(404)
 			}
 		})
+
 		}
 	} else {
 		console.log("No payloads were returned from query");
