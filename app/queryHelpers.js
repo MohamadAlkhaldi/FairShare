@@ -1,9 +1,10 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var Fabric_Client = require('fabric-client');
-var path = require('path');
-var util = require('util');
-var os = require('os');
+const express = require('express');
+const bodyParser = require('body-parser');
+const Fabric_Client = require('fabric-client');
+const path = require('path');
+const util = require('util');
+const os = require('os');
+const bcrypt = require('bcrypt');
 
 
 var fabric_client = new Fabric_Client();
@@ -35,15 +36,10 @@ var keyStore = function(state_store){
 var query = function (req, res) {
 	console.log("query",req.body)
 	Fabric_Client.newDefaultKeyValueStore({ path: store_path
-}).then(keyStore).then((user_from_store) => {
-	if (user_from_store && user_from_store.isEnrolled()) {
-		console.log('Successfully loaded user1 from persistence');
-		member_user = user_from_store;
-	} else {
-		throw new Error('Failed to get user1.... run registerUser.js');
-	}
+	}).then(keyStore).then((user_from_store) => {
+		setUser(user_from_store)
 
-	const request = {
+		const request = {
 		//targets:[peer,peer1],
 		chaincodeId: 'mycc',
 		fcn: req.body.fcn,
@@ -71,26 +67,25 @@ var query = function (req, res) {
 });
 }
 
-var signUp = function(req,res){
+
+var signUp = function(req,res,hash){
 	Fabric_Client.newDefaultKeyValueStore({ path: store_path
-}).then(keyStore).then((user_from_store) => {
-	if (user_from_store && user_from_store.isEnrolled()) {
-		console.log('Successfully loaded '+blockchainUser+' from persistence');
-		member_user = user_from_store;
-	} else {
-		throw new Error('Failed to get '+blockchainUser+' ... run registerUser.js');
-	}
+	}).then(keyStore).then((user_from_store) => {
+		setUser(user_from_store)
 
 	// get a transaction id object based on the current user assigned to fabric client
 	tx_id = fabric_client.newTransactionID();
 	console.log("Assigning transaction_id: ", tx_id._transaction_id);
 
+
+
 	// must send the proposal to endorsing peers
+	console.log('hash',hash)
 	var request = {
 		targets:[peer],
 		chaincodeId: 'mycc',
 		fcn: "registerUser",
-		args: [req.body.username,req.body.password],
+		args: [req.body.username,hash],
 		chainId: 'mychannel',
 		txId: tx_id
 	};
@@ -98,10 +93,7 @@ var signUp = function(req,res){
 	// send the transaction proposal to the peers
 	return channel.sendTransactionProposal(request);
 }).then((results) => {
-	proposal(results , tx_id)
-
-
-
+	proposal(results , tx_id ,req ,res)
 
 })
 .catch((err) => {
@@ -112,60 +104,63 @@ var signUp = function(req,res){
 
 
 var invoke = function (req, res) {
-	console.log("invoooookeeee",typeof req.body.args,req.body.args);
-Fabric_Client.newDefaultKeyValueStore({ path: store_path
-}).then(keyStore).then((user_from_store) => {
-	if (user_from_store && user_from_store.isEnrolled()) {
-		console.log('Successfully loaded user1 from persistence');
-		member_user = user_from_store;
-	} else {
-		throw new Error('Failed to get user1.... run registerUser.js');
-	}
+	console.log("invoooookeeee",req.session.user);
+	Fabric_Client.newDefaultKeyValueStore({ path: store_path
+	}).then(keyStore).then((user_from_store) => {
+		if (user_from_store && user_from_store.isEnrolled()) {
+			console.log('Successfully loaded user1 from persistence');
+			member_user = user_from_store;
+		} else {
+			throw new Error('Failed to get user1.... run registerUser.js');
+		}
 
-	// get a transaction id object based on the current user assigned to fabric client
-	tx_id = fabric_client.newTransactionID();
-	console.log("Assigning transaction_id: ", tx_id._transaction_id);
+    // get a transaction id object based on the current user assigned to fabric client
+    tx_id = fabric_client.newTransactionID();
+    console.log("Assigning transaction_id: ", tx_id._transaction_id);
 
-	// must send the proposal to endorsing peers
-	var request = {
-		targets:[peer],
-		chaincodeId: 'mycc',
-		fcn: req.body.fcn,
-		args: req.body.args,
-		chainId: 'mychannel',
-		txId: tx_id
-	};
+    var username = req.session.user.slice(1,req.session.user.length)
+    req.body.args.push(username)
+    console.log('arrrrrrrrgs',req.body.args)
+    // must send the proposal to endorsing peers
+    var request = {
+    	targets:[peer],
+    	chaincodeId: 'mycc',
+    	fcn: req.body.fcn,
+    	args: req.body.args,
+    	chainId: 'mychannel',
+    	txId: tx_id
+    };
 
 	// send the transaction proposal to the peers
 	return channel.sendTransactionProposal(request);
 }).then((results) => {
-	proposal(results , tx_id)
+	proposal(results , tx_id ,req ,res)
+	
+})
 
 .catch((err) => {
 	console.error('Failed to invoke successfully :: ' + err);
 });
 }
 
-
-
 var login = function(req,res){
 	var username = '#'+req.body.username;
 	var password = req.body.password;
 	if(username.toLowerCase() === '#guest'){
 		blockchainUser =  'user1' ;
-	res.send('guest');
-}else {
-	
-Fabric_Client.newDefaultKeyValueStore({ path: store_path
-}).then(keyStore).then((user_from_store) => {
-	if (user_from_store && user_from_store.isEnrolled()) {
-		console.log('Successfully loaded '+blockchainUser+' from persistence');
-		member_user = user_from_store;
-	} else {
-		throw new Error('Failed to get '+blockchainUser+' ... run registerUser.js');
-	}
+		res.send('guest');
+	}else {
 
-	const request = {
+		Fabric_Client.newDefaultKeyValueStore({ path: store_path
+		}).then(keyStore).then((user_from_store) => {
+			if (user_from_store && user_from_store.isEnrolled()) {
+				console.log('Successfully loaded '+blockchainUser+' from persistence');
+				member_user = user_from_store;
+			} else {
+				throw new Error('Failed to get '+blockchainUser);
+			}
+
+			const request = {
 		//targets:[peer],
 		chaincodeId: 'mycc',
 		fcn: 'queryUser',
@@ -183,12 +178,20 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 		} else if(query_responses[0].toString() === query_responses[1].toString()){
 			console.log("Response is ", query_responses[0].toString())
 			console.log('hiiiii', typeof JSON.parse(query_responses[0].toString()))
-			if(JSON.parse(query_responses[0].toString()).password === password){
-				blockchainUser = 'admin';
-				res.send(username);} 
-				else{ console.log("wrong password")
-					res.sendStatus(404)}
-			//res.send(JSON.parse(query_responses[0].toString()))
+			
+
+			bcrypt.compare(password,JSON.parse(query_responses[0].toString()).password, function(err, isMatch) {
+				if (err) return 'error';
+				if(isMatch){
+					blockchainUser = 'admin';
+					createSession(req,res,username)
+					console.log("session",req.session)
+				}else{
+					console.log("wrong password")
+					res.sendStatus(404)
+				}
+			})
+
 		}
 	} else {
 		console.log("No payloads were returned from query");
@@ -201,23 +204,23 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }
 
 
-var proposal = function(result , txId){
+var proposal = function(results , txId , req ,res ){
 
-var proposalResponses = results[0];
+	var proposalResponses = results[0];
 	var proposal = results[1];
 	//console.log('--------->',results[1])
 	let isProposalGood = false;
 	if (proposalResponses && proposalResponses[0].response &&
 		proposalResponses[0].response.status === 200) {
-			isProposalGood = true;
-			console.log('Transaction proposal was good');
-		} else {
-			console.error('Transaction proposal was bad');
-		}
-	if (isProposalGood) {
-		console.log(util.format(
-			'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s"',
-			proposalResponses[0].response.status, proposalResponses[0].response.message));
+		isProposalGood = true;
+	console.log('Transaction proposal was good');
+} else {
+	console.error('Transaction proposal was bad');
+}
+if (isProposalGood) {
+	console.log(util.format(
+		'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s"',
+		proposalResponses[0].response.status, proposalResponses[0].response.message));
 
 		// build up the request for the orderer to have the transaction committed
 		var request = {
@@ -281,6 +284,42 @@ var proposalResponses = results[0];
 
 
 }
+
+
+var setUser = function(user_from_store){
+
+	if (user_from_store && user_from_store.isEnrolled()) {
+		console.log('Successfully loaded user1 from persistence');
+		member_user = user_from_store;
+	} else {
+		throw new Error('Failed to get user1');
+	}
+}
+
+
+
+var isLoggedIn = function(req) {
+	return req.session ? !!req.session.user : false;
+};
+
+var checkUser = function(req, res){
+	console.log(req.session.user);
+	if (!isLoggedIn(req)) {
+		res.sendStatus(404);
+	} else {
+		res.send(req.session.user);
+	}
+};
+
+var createSession = function(req, res, newUser) {
+	return req.session.regenerate(function() {
+		req.session.user = newUser;
+		console.log("session user",req.session.user)
+		res.send(newUser);;
+	});
+};
+module.exports.checkUser = checkUser;
+module.exports.createSession =createSession;
 module.exports.login = login
 module.exports.query = query
 module.exports.signUp = signUp
