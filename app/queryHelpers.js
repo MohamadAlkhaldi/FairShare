@@ -6,6 +6,8 @@ var util = require('util');
 var os = require('os');
 
 
+
+
 var fabric_client = new Fabric_Client();
 var blockchainUser = 'user1';
 // setting up the network
@@ -84,13 +86,15 @@ var signUp = function(req,res){
 	// get a transaction id object based on the current user assigned to fabric client
 	tx_id = fabric_client.newTransactionID();
 	console.log("Assigning transaction_id: ", tx_id._transaction_id);
+  
+   
 
 	// must send the proposal to endorsing peers
 	var request = {
 		targets:[peer],
 		chaincodeId: 'mycc',
 		fcn: "registerUser",
-		args: [req.body.username,req.body.password],
+		args: [req.body.username,passWord],
 		chainId: 'mychannel',
 		txId: tx_id
 	};
@@ -326,12 +330,14 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 		} else if(query_responses[0].toString() === query_responses[1].toString()){
 			console.log("Response is ", query_responses[0].toString())
 			console.log('hiiiii', typeof JSON.parse(query_responses[0].toString()))
+			
+			
 			if(JSON.parse(query_responses[0].toString()).password === password){
 				blockchainUser = 'admin';
 				res.send(username);} 
 				else{ console.log("wrong password")
 					res.sendStatus(404)}
-			//res.send(JSON.parse(query_responses[0].toString()))
+			res.send(JSON.parse(query_responses[0].toString()))
 		}
 	} else {
 		console.log("No payloads were returned from query");

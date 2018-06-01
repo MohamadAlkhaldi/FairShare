@@ -63,15 +63,15 @@ var Chaincode = class {
 
   // Checking if family entry exists and if not it will create it  
   async checkFamily(stub, args) {
-    if (args.length != 4) {
-      return shim.error('Incorrect number of arguments. Expecting 4');
+    if (args.length != 5) {
+      return shim.error('Incorrect number of arguments. Expecting 5');
     }
     // Get args value
     let id = args[0];
     let organization = args[1];
     let amount = args[2]
     let date = args[3]
-
+    
 
     // Get the state of the family from the ledger
     let valueInBytes = await stub.getState(id);
@@ -168,8 +168,8 @@ var Chaincode = class {
 
  // Adding the transaction to the ledger
  async addAid(stub, args) {
-  if (args.length != 4) {
-    throw new Error('Incorrect number of arguments. Expecting 4');
+  if (args.length != 5) {
+    throw new Error('Incorrect number of arguments. Expecting 5');
   }
 
     // Assigning arguments value to variables
@@ -177,6 +177,7 @@ var Chaincode = class {
     let organization = args[1];
     let amount = args[2]
     let date = args[3]
+    let doc = args[4]
 
     //create an aid object
     let aid = {
@@ -184,7 +185,9 @@ var Chaincode = class {
       familyId : id,
       amount : amount,
       organization : organization,
-      date: date
+      date: date,
+      doc: doc
+      
     }
 
     // Write the states to the ledger
@@ -277,7 +280,7 @@ var Chaincode = class {
 
   // Updating organization's information 
   async updateOrg(stub, args) {
-    if (args.length != 4) {
+    if (args.length != 5) {
       throw new Error('Incorrect number of arguments. Expecting name of the organization')
     }
 
@@ -286,6 +289,7 @@ var Chaincode = class {
     let organization = args[1];
     let amount = args[2]
     let date = args[3]
+  
 
     // Get the state for the organization from the ledger 
     let valueInBytes = await stub.getState('#'+organization);
