@@ -18,7 +18,8 @@ constructor(props) {
 super(props);
     this.state = { 
       username:'',
-      loggedIn: false
+      loggedIn: false,
+      x: false
     }
        this.changeUser=this.changeUser.bind(this);
        this.changeLoggedIn=this.changeLoggedIn.bind(this);
@@ -30,10 +31,30 @@ super(props);
 
        this.familyWrap=this.familyWrap.bind(this);
 }
+componentDidMount(){
+  $.ajax({
+    type:'GET',
+    url: '/isLogged',
+    success: (data) => {
+        console.log('worked', data)
+        this.setState({
+          loggedIn:true,
+          username:data,
+          x: true
+        })
+      },
+   error:(data) => {
+    this.setState({
+          x: true
+        })
+   }  
+
+  })
+}
 
 changeUser(name){
 
-  this.setState({username: name})
+  this.setState({username: "#"+name})
   //console.log(this.state.username)
 }
 
@@ -96,7 +117,8 @@ familyWrap(){
           </div>
           </div>
 
-
+          {this.state.x ?
+          <div>
           
           <Route path="/app" render={this.appWrap}/>  
           <Route path="/login" exact render={this.signWrap}/> 
@@ -107,7 +129,9 @@ familyWrap(){
           <Route path="/queryGuest" component = {QueryGuest}/>
           <Route path="/familyInfo" render = {this.familyWrap}/>
             
-
+          </div>
+            : null
+           }
           
         </div>
         <div className='footer' style={{ marginTop:'40px'}}>
