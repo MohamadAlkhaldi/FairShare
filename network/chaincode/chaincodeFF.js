@@ -113,7 +113,7 @@ var Chaincode = class {
 
   // Update the information for a spesfic family
   async updateFamily(stub, args) {
-    if (args.length != 1) {
+    if (args.length != 6) {
       throw new Error('Incorrect number of arguments. Expecting 6 arguments')
     } 
 
@@ -139,7 +139,7 @@ var Chaincode = class {
     family.date = date
 
     // Write the states back to the ledger
-    await stub.putState('?'+familyId, Buffer.from(JSON.stringify(val)));
+    await stub.putState('?'+familyId, Buffer.from(JSON.stringify(family)));
 
   }
 

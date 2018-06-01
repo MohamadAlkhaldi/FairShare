@@ -118,7 +118,7 @@ chaincodeInvoke () {
 	PEER=$1
 	ORG=$2
 	setGlobals $PEER $ORG
-		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["registerUser","admin","admin"]}' >&log.txt
+		peer chaincode invoke -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -c '{"Args":["registerUser","admin","$2b$10$Igoh2Ase9fbk8eG/HKdOXeIYCEi1yfMXd9urvz7EWr8q4Pb0OyhUK"]}' >&log.txt
 	
 	echo "===================== Invoke transaction on peer${PEER}.org${ORG} on channel '$CHANNEL_NAME' is successful ===================== "
 	echo

@@ -4,6 +4,8 @@ var Fabric_Client = require('fabric-client');
 var path = require('path');
 var util = require('util');
 var os = require('os');
+var bcrypt = require('bcrypt');
+
 
 
 
@@ -73,7 +75,8 @@ var query = function (req, res) {
 });
 }
 
-var signUp = function(req,res){
+
+var signUp = function(req,res,hash){
 	Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }).then(keyStore).then((user_from_store) => {
 	if (user_from_store && user_from_store.isEnrolled()) {
@@ -90,11 +93,12 @@ var signUp = function(req,res){
    
 
 	// must send the proposal to endorsing peers
+	console.log('hash',hash)
 	var request = {
 		targets:[peer],
 		chaincodeId: 'mycc',
 		fcn: "registerUser",
-		args: [req.body.username,passWord],
+		args: [req.body.username,hash],
 		chainId: 'mychannel',
 		txId: tx_id
 	};
@@ -331,13 +335,18 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 			console.log("Response is ", query_responses[0].toString())
 			console.log('hiiiii', typeof JSON.parse(query_responses[0].toString()))
 			
-			
-			if(JSON.parse(query_responses[0].toString()).password === password){
+
+		bcrypt.compare(password,JSON.parse(query_responses[0].toString()).password, function(err, isMatch) {
+    		if (err) return 'error';
+			if(isMatch){
 				blockchainUser = 'admin';
-				res.send(username);} 
-				else{ console.log("wrong password")
-					res.sendStatus(404)}
-			res.send(JSON.parse(query_responses[0].toString()))
+				res.send(username);
+			}else{
+				console.log("wrong password")
+					res.sendStatus(404)
+			}
+		})
+
 		}
 	} else {
 		console.log("No payloads were returned from query");

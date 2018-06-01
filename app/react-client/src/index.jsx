@@ -95,6 +95,8 @@ class App extends React.Component {
       <br/>
       <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/invoke')}><strong>Add New Aid</strong></button>
       <br/>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/familyinfo')}><strong>Add New Family</strong></button>
+      <br/>
       </center>
       </div>
       )} else if(this.props.loggedIn){
@@ -104,6 +106,8 @@ class App extends React.Component {
       <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/query')}><strong>Search Family</strong></button>
       <br/>
       <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/invoke')}><strong>Add New Aid</strong></button>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/familyinfo')}><strong>Add New Family</strong></button>
+      <br/>
       </center>
       </div>
       )
