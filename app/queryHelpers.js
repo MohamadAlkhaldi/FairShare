@@ -340,7 +340,8 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
     		if (err) return 'error';
 			if(isMatch){
 				blockchainUser = 'admin';
-				res.send(username);
+				createSession(req,res,username)
+				console.log("session",req.session)
 			}else{
 				console.log("wrong password")
 					res.sendStatus(404)
@@ -358,21 +359,28 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }
 }
 
-// var init = function(){
-// 	let user = db.User({
-//             userName: "admin",
-//             passWord: "admin"           
-//           })
-//           user.save((err, data) =>{
-//             if (err){
-//               console.log(err);
-//             }
-//             else {
-//               console.log(data);
-//             }
-//           })          
-// }
+var isLoggedIn = function(req) {
+  return req.session ? !!req.session.user : false;
+};
 
+var checkUser = function(req, res){
+	console.log(req.session.user);
+  if (!isLoggedIn(req)) {
+    res.sendStatus(404);
+  } else {
+    res.send(req.session.user);
+  }
+};
+
+var createSession = function(req, res, newUser) {
+  return req.session.regenerate(function() {
+      req.session.user = newUser;
+      console.log("session user",req.session.user)
+      res.send(newUser);;
+    });
+};
+module.exports.checkUser = checkUser;
+module.exports.createSession =createSession;
 module.exports.login = login
 module.exports.query = query
 module.exports.signUp = signUp

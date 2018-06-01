@@ -84,7 +84,7 @@ class App extends React.Component {
     //   return <Redirect to='/queryGuest'/>;
     
     //   }else 
-    if(this.state.new === "admin" && this.props.loggedIn){
+    if(this.state.new === "#admin" && this.props.loggedIn){
       return (
       <div className='container-fluid animatedMove' style={{ marginTop: '30px'}}>
 
