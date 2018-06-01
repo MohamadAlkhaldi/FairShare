@@ -189,7 +189,7 @@ var signUp = function(req,res,hash){
 
 
 var invoke = function (req, res) {
-	console.log("invoooookeeee",typeof req.body.args,req.body.args);
+	console.log("invoooookeeee",req.session.user);
 Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }).then(keyStore).then((user_from_store) => {
 	if (user_from_store && user_from_store.isEnrolled()) {
@@ -203,6 +203,9 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 	tx_id = fabric_client.newTransactionID();
 	console.log("Assigning transaction_id: ", tx_id._transaction_id);
 
+	 var username = req.session.user.slice(1,req.session.user.length)
+	 req.body.args.push(username)
+	 console.log('arrrrrrrrgs',req.body.args)
 	// must send the proposal to endorsing peers
 	var request = {
 		targets:[peer],
