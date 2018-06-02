@@ -1,3 +1,8 @@
+img:hover {
+    webkit-filter: blur(4px); /* Chrome, Safari, Opera */
+    filter: blur(4px);
+}
+
 .mssgErr{
   color:red;
   /*background-color: #FF5733;*/
