@@ -1,13 +1,10 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var Fabric_Client = require('fabric-client');
-var path = require('path');
-var util = require('util');
-var os = require('os');
-var bcrypt = require('bcrypt');
-
-
-
+const express = require('express');
+const bodyParser = require('body-parser');
+const Fabric_Client = require('fabric-client');
+const path = require('path');
+const util = require('util');
+const os = require('os');
+const bcrypt = require('bcrypt');
 
 
 var fabric_client = new Fabric_Client();
@@ -39,15 +36,10 @@ var keyStore = function(state_store){
 var query = function (req, res) {
 	console.log("query",req.body)
 	Fabric_Client.newDefaultKeyValueStore({ path: store_path
-}).then(keyStore).then((user_from_store) => {
-	if (user_from_store && user_from_store.isEnrolled()) {
-		console.log('Successfully loaded user1 from persistence');
-		member_user = user_from_store;
-	} else {
-		throw new Error('Failed to get user1.... run registerUser.js');
-	}
+	}).then(keyStore).then((user_from_store) => {
+		setUser(user_from_store)
 
-	const request = {
+		const request = {
 		//targets:[peer,peer1],
 		chaincodeId: 'mycc',
 		fcn: req.body.fcn,
@@ -78,19 +70,14 @@ var query = function (req, res) {
 
 var signUp = function(req,res,hash){
 	Fabric_Client.newDefaultKeyValueStore({ path: store_path
-}).then(keyStore).then((user_from_store) => {
-	if (user_from_store && user_from_store.isEnrolled()) {
-		console.log('Successfully loaded '+blockchainUser+' from persistence');
-		member_user = user_from_store;
-	} else {
-		throw new Error('Failed to get '+blockchainUser+' ... run registerUser.js');
-	}
+	}).then(keyStore).then((user_from_store) => {
+		setUser(user_from_store)
 
 	// get a transaction id object based on the current user assigned to fabric client
 	tx_id = fabric_client.newTransactionID();
 	console.log("Assigning transaction_id: ", tx_id._transaction_id);
-  
-   
+
+
 
 	// must send the proposal to endorsing peers
 	console.log('hash',hash)
@@ -106,21 +93,134 @@ var signUp = function(req,res,hash){
 	// send the transaction proposal to the peers
 	return channel.sendTransactionProposal(request);
 }).then((results) => {
+	proposal(results , tx_id ,req ,res)
+
+})
+.catch((err) => {
+	console.error('Failed to invoke successfully :: ' + err);
+});   
+}
+
+
+
+var invoke = function (req, res) {
+	console.log("invoooookeeee",req.session.user);
+	Fabric_Client.newDefaultKeyValueStore({ path: store_path
+	}).then(keyStore).then((user_from_store) => {
+		if (user_from_store && user_from_store.isEnrolled()) {
+			console.log('Successfully loaded user1 from persistence');
+			member_user = user_from_store;
+		} else {
+			throw new Error('Failed to get user1.... run registerUser.js');
+		}
+
+    // get a transaction id object based on the current user assigned to fabric client
+    tx_id = fabric_client.newTransactionID();
+    console.log("Assigning transaction_id: ", tx_id._transaction_id);
+
+    var username = req.session.user.slice(1,req.session.user.length)
+    req.body.args.push(username)
+    console.log('arrrrrrrrgs',req.body.args)
+    // must send the proposal to endorsing peers
+    var request = {
+    	targets:[peer],
+    	chaincodeId: 'mycc',
+    	fcn: req.body.fcn,
+    	args: req.body.args,
+    	chainId: 'mychannel',
+    	txId: tx_id
+    };
+
+	// send the transaction proposal to the peers
+	return channel.sendTransactionProposal(request);
+}).then((results) => {
+	proposal(results , tx_id ,req ,res)
+	
+})
+
+.catch((err) => {
+	console.error('Failed to invoke successfully :: ' + err);
+});
+}
+
+var login = function(req,res){
+	var username = '#'+req.body.username;
+	var password = req.body.password;
+	if(username.toLowerCase() === '#guest'){
+		blockchainUser =  'user1' ;
+		res.send('guest');
+	}else {
+
+		Fabric_Client.newDefaultKeyValueStore({ path: store_path
+		}).then(keyStore).then((user_from_store) => {
+			if (user_from_store && user_from_store.isEnrolled()) {
+				console.log('Successfully loaded '+blockchainUser+' from persistence');
+				member_user = user_from_store;
+			} else {
+				throw new Error('Failed to get '+blockchainUser);
+			}
+
+			const request = {
+		//targets:[peer],
+		chaincodeId: 'mycc',
+		fcn: 'queryUser',
+		args: [username]
+	};
+
+	// send the query proposal to the peer
+	return channel.queryByChaincode(request);
+}).then((query_responses) => {
+	console.log("Query has completed, checking results");
+	// query_responses could have more than one results if there multiple peers were used as targets
+	if (query_responses && query_responses.length == 2 ) {
+		if (query_responses[0] instanceof Error || query_responses[1] instanceof Error) {
+			console.error("error from query = ", query_responses[0]);
+		} else if(query_responses[0].toString() === query_responses[1].toString()){
+			console.log("Response is ", query_responses[0].toString())
+			console.log('hiiiii', typeof JSON.parse(query_responses[0].toString()))
+			
+
+			bcrypt.compare(password,JSON.parse(query_responses[0].toString()).password, function(err, isMatch) {
+				if (err) return 'error';
+				if(isMatch){
+					blockchainUser = 'admin';
+					createSession(req,res,username)
+					console.log("session",req.session)
+				}else{
+					console.log("wrong password")
+					res.sendStatus(404)
+				}
+			})
+
+		}
+	} else {
+		console.log("No payloads were returned from query");
+	}
+}).catch((err) => {
+	console.error('Failed to query successfully :: ' + err);
+});
+
+}
+}
+
+
+var proposal = function(results , txId , req ,res ){
+
 	var proposalResponses = results[0];
 	var proposal = results[1];
 	//console.log('--------->',results[1])
 	let isProposalGood = false;
 	if (proposalResponses && proposalResponses[0].response &&
 		proposalResponses[0].response.status === 200) {
-			isProposalGood = true;
-			console.log('Transaction proposal was good');
-		} else {
-			console.error('Transaction proposal was bad');
-		}
-	if (isProposalGood) {
-		console.log(util.format(
-			'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s"',
-			proposalResponses[0].response.status, proposalResponses[0].response.message));
+		isProposalGood = true;
+	console.log('Transaction proposal was good');
+} else {
+	console.error('Transaction proposal was bad');
+}
+if (isProposalGood) {
+	console.log(util.format(
+		'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s"',
+		proposalResponses[0].response.status, proposalResponses[0].response.message));
 
 		// build up the request for the orderer to have the transaction committed
 		var request = {
@@ -180,207 +280,43 @@ var signUp = function(req,res,hash){
 		console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
 		throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
 	}
-})
-.catch((err) => {
-	console.error('Failed to invoke successfully :: ' + err);
-});   
+
+
+
 }
 
 
+var setUser = function(user_from_store){
 
-var invoke = function (req, res) {
-	console.log("invoooookeeee",req.session.user);
-Fabric_Client.newDefaultKeyValueStore({ path: store_path
-}).then(keyStore).then((user_from_store) => {
 	if (user_from_store && user_from_store.isEnrolled()) {
 		console.log('Successfully loaded user1 from persistence');
 		member_user = user_from_store;
 	} else {
-		throw new Error('Failed to get user1.... run registerUser.js');
+		throw new Error('Failed to get user1');
 	}
-
-	// get a transaction id object based on the current user assigned to fabric client
-	tx_id = fabric_client.newTransactionID();
-	console.log("Assigning transaction_id: ", tx_id._transaction_id);
-
-	 var username = req.session.user.slice(1,req.session.user.length)
-	 req.body.args.push(username)
-	 console.log('arrrrrrrrgs',req.body.args)
-	// must send the proposal to endorsing peers
-	var request = {
-		targets:[peer],
-		chaincodeId: 'mycc',
-		fcn: req.body.fcn,
-		args: req.body.args,
-		chainId: 'mychannel',
-		txId: tx_id
-	};
-
-	// send the transaction proposal to the peers
-	return channel.sendTransactionProposal(request);
-}).then((results) => {
-	var proposalResponses = results[0];
-	var proposal = results[1];
-	let isProposalGood = false;
-	if (proposalResponses && proposalResponses[0].response &&
-		proposalResponses[0].response.status === 200) {
-			isProposalGood = true;
-			console.log('Transaction proposal was good');
-		} else {
-			console.error('Transaction proposal was bad');
-		}
-	if (isProposalGood) {
-		// console.log(util.format(
-		// 	'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s"',
-		// 	proposalResponses[0].response.status, proposalResponses[0].response.message));
-
-		// build up the request for the orderer to have the transaction committed
-		var request = {
-			proposalResponses: proposalResponses,
-			proposal: proposal
-		};
-
-		// set the transaction listener and set a timeout of 30 sec
-		// if the transaction did not get committed within the timeout period,
-		// report a TIMEOUT status
-		var transaction_id_string = tx_id.getTransactionID(); //Get the transaction ID string to be used by the event processing
-		var promises = [];
-
-		// Send the proposal responses that contain the endorsements of a transaction proposal to the orderer for further processing. This is the 2nd phase of the transaction lifecycle in the fabric. 
-		var sendPromise = channel.sendTransaction(request);
-		promises.push(sendPromise); 
-		//we want the send transaction first, so that we know where to check status
-
-		// get an eventhub once the fabric client has a user assigned. The user
-		// is required bacause the event registration must be signed
-		// An event hub object encapsulates the properties of an event stream on a peer node, through which the peer publishes notifications of blocks being committed in the channel's ledger.
-		let event_hub = fabric_client.newEventHub();
-		event_hub.setPeerAddr('grpc://localhost:7053');
-
-		// using resolve the promise so that result status may be processed
-		// under the then clause rather than having the catch clause process
-		// the status
-		let txPromise = new Promise((resolve, reject) => {
-			let handle = setTimeout(() => {
-				event_hub.disconnect();
-				resolve({event_status : 'TIMEOUT'}); //we could use reject(new Error('Trnasaction did not complete within 30 seconds'));
-			}, 3000);
-			event_hub.connect();
-			event_hub.registerTxEvent(transaction_id_string, (tx, code) => {
-				// this is the callback for transaction event status
-				// first some clean up of event listener
-				clearTimeout(handle);
-				event_hub.unregisterTxEvent(transaction_id_string);
-				event_hub.disconnect();
-
-				// now let the application know what happened
-				var return_status = {event_status : code, tx_id : transaction_id_string};
-				if (code !== 'VALID') {
-					console.error('The transaction was invalid, code = ' + code);
-					resolve(return_status); // we could use reject(new Error('Problem with the tranaction, event status ::'+code));
-				} else {
-					console.log('The transaction has been committed on peer ' + event_hub._ep._endpoint.addr);
-					resolve(return_status);
-					res.send('success')
-				}
-			}, (err) => {
-				//this is the callback if something goes wrong with the event registration or processing
-				reject(new Error('There was a problem with the eventhub ::'+err));
-			});
-		});
-		promises.push(txPromise);
-
-		return Promise.all(promises);
-	} else {
-		console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
-		throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
-	}
-})
-
-.catch((err) => {
-	console.error('Failed to invoke successfully :: ' + err);
-});
 }
 
-var login = function(req,res){
-	var username = '#'+req.body.username;
-	var password = req.body.password;
-	if(username.toLowerCase() === '#guest'){
-		blockchainUser =  'user1' ;
-	res.send('guest');
-}else {
-	
-Fabric_Client.newDefaultKeyValueStore({ path: store_path
-}).then(keyStore).then((user_from_store) => {
-	if (user_from_store && user_from_store.isEnrolled()) {
-		console.log('Successfully loaded '+blockchainUser+' from persistence');
-		member_user = user_from_store;
-	} else {
-		throw new Error('Failed to get '+blockchainUser+' ... run registerUser.js');
-	}
 
-	const request = {
-		//targets:[peer],
-		chaincodeId: 'mycc',
-		fcn: 'queryUser',
-		args: [username]
-	};
-
-	// send the query proposal to the peer
-	return channel.queryByChaincode(request);
-}).then((query_responses) => {
-	console.log("Query has completed, checking results");
-	// query_responses could have more than one results if there multiple peers were used as targets
-	if (query_responses && query_responses.length == 2 ) {
-		if (query_responses[0] instanceof Error || query_responses[1] instanceof Error) {
-			console.error("error from query = ", query_responses[0]);
-		} else if(query_responses[0].toString() === query_responses[1].toString()){
-			console.log("Response is ", query_responses[0].toString())
-			console.log('hiiiii', typeof JSON.parse(query_responses[0].toString()))
-			
-
-		bcrypt.compare(password,JSON.parse(query_responses[0].toString()).password, function(err, isMatch) {
-    		if (err) return 'error';
-			if(isMatch){
-				blockchainUser = 'admin';
-				createSession(req,res,username)
-				console.log("session",req.session)
-			}else{
-				console.log("wrong password")
-					res.sendStatus(404)
-			}
-		})
-
-		}
-	} else {
-		console.log("No payloads were returned from query");
-	}
-}).catch((err) => {
-	console.error('Failed to query successfully :: ' + err);
-});
-
-}
-}
 
 var isLoggedIn = function(req) {
-  return req.session ? !!req.session.user : false;
+	return req.session ? !!req.session.user : false;
 };
 
 var checkUser = function(req, res){
 	console.log(req.session.user);
-  if (!isLoggedIn(req)) {
-    res.sendStatus(404);
-  } else {
-    res.send(req.session.user);
-  }
+	if (!isLoggedIn(req)) {
+		res.sendStatus(404);
+	} else {
+		res.send(req.session.user);
+	}
 };
 
 var createSession = function(req, res, newUser) {
-  return req.session.regenerate(function() {
-      req.session.user = newUser;
-      console.log("session user",req.session.user)
-      res.send(newUser);;
-    });
+	return req.session.regenerate(function() {
+		req.session.user = newUser;
+		console.log("session user",req.session.user)
+		res.send(newUser);;
+	});
 };
 module.exports.checkUser = checkUser;
 module.exports.createSession =createSession;
