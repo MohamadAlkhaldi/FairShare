@@ -47,10 +47,11 @@ class Invoke extends React.Component {
       url: '/query',
       data:{fcn:'getFamilyInfo',args:this.state.FamilyID}, 
       success: (data) => {
-        console.log(data)
+        if(data === 'failed'){
         this.setState({
           familyinfo:false
         })
+      }
       }
     });
   }
