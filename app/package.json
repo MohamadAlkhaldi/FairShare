@@ -9,7 +9,6 @@
         "test": "mocha --compilers js:babel-core/register"
     },
     "dependencies": {
-        "angular": "^1.6.3",
         "bcrypt": "^2.0.1",
         "body-parser": "^1.17.2",
         "chai": "^4.1.2",
@@ -19,8 +18,6 @@
         "fabric-client": "~1.1.0",
         "grpc": "^1.6.0",
         "jquery": "^3.1.1",
-        "mongoose": "^4.8.6",
-        "mysql": "^2.13.0",
         "react": "^15.4.2",
         "react-dom": "^15.4.2",
         "react-router-dom": "^4.2.2",
