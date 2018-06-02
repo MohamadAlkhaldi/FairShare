@@ -52,7 +52,8 @@ From within the root directory:
 
 ```sh
  cd app/
- npm install``` 
+ npm install
+ ``` 
 this will install all the dependencies required to run the project.
 
 
