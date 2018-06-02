@@ -59,6 +59,16 @@ changeUser(name){
 }
 
 changeLoggedIn(value){
+  if(!value){
+    $.ajax({
+    type:'GET',
+    url: '/logout',
+    success: (data) => {
+        console.log('logged out', data)
+      } 
+
+  })
+  }
   this.setState({loggedIn: value})
 }
 signWrap(){

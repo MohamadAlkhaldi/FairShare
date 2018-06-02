@@ -62,7 +62,7 @@ var query = function (req, res) {
 		console.log("No payloads were returned from query");
 	}
 }).catch((err) => {
-	console.error('Failed to query successfully :: ' + err);
+	console.error('Failed to query successfullyyyyyyyy :: ' + err);
 	res.send('failed')
 });
 }

@@ -8,7 +8,6 @@ class Invoke extends React.Component {
 
     super(props);
     this.state = {
-      ORG:"",
       FamilyID:"",
       Amount:"",
       Date:"",
@@ -34,7 +33,7 @@ class Invoke extends React.Component {
     $.ajax({
       type:'POST',
       url: '/invoke',
-      data:{fcn:'newAid',args:[this.state.FamilyID,this.state.ORG,this.state.Amount,this.state.Date,this.state.Document]}, 
+      data:{fcn:'newAid',args:[this.state.FamilyID,this.state.Amount,this.state.Date,this.state.Document]}, 
       success: (data) => {
         console.log(data)
         this.setState({
@@ -48,10 +47,11 @@ class Invoke extends React.Component {
       url: '/query',
       data:{fcn:'getFamilyInfo',args:this.state.FamilyID}, 
       success: (data) => {
-        console.log(data)
+        if(data === 'failed'){
         this.setState({
           familyinfo:false
         })
+      }
       }
     });
   }
@@ -79,10 +79,7 @@ class Invoke extends React.Component {
        <center>
             <h3 style={{color:'#17503C' , fontFamily:'Merriweather'}}><strong>Add New Aid</strong></h3>
             <form>
-              <div className="form-group">
-                <label style={{color:'#FF5733', marginRight: '10px'}} for="Organization">Organization</label>
-                <input type="text" className="form-control" id="Organization" placeholder="Enter organization" name='ORG' onChange={this.onChange} />
-              </div>
+              
               <div className="form-group">
                 <label style={{color:'#FF5733', marginRight: '10px'}} for="pwd">FamilyID</label>
                 <input type="text" className="form-control" id="pwd" placeholder="Enter FamilyID" name='FamilyID' onChange={this.onChange} />

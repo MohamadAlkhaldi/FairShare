@@ -72,10 +72,10 @@ render () {
           </form>
         </div>
 
-        <div className="container text-center" style={{marginTop: '80px', color:'#D2D2D2'}}>
+        <div className="container text-center" style={{marginTop: '80px', opacity:'0.7'}}>
         
-        <h3 style={{fontFamily:'Merriweather'}}><em>"We have created a blabla bla blab blala"</em></h3>
-        <h4 style={{fontFamily:'Merriweather'}}>Mohamad</h4>
+        <h3 style={{fontFamily:'Merriweather'}}><em>"Just, is the only road towards peace"</em></h3>
+        <h4 style={{fontFamily:'Merriweather'}}><em>Mohamad</em></h4>
         <br/>
 
         </div>
