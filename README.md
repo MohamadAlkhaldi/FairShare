@@ -1,5 +1,5 @@
 # FairShare
-> this application uses hyperledger fabric blockchain framework to create a shared ledger between charity organizations where each organization can share its records about aids provided to families, and access others.
+> This application uses hyperledger fabric blockchain framework to create a shared ledger between charity organizations where each organization can share its records about aids provided to families, and access others.
 
 ## Table of Contents
 
@@ -10,13 +10,14 @@
 1. [How to Start](#how-to-start)
 1. [Team](#team)
 
-##Introduction
+## Introduction
 
 Fair Share is web application that was created to meet of the need for a unified source of information about families in need and what kind of aids they recieve, which will make the job of these organizations easier and more convenient, and most importantly; it will help in distributing the aids more fairly and in covering as much families needs as possible; hence each family has it's own history of aids provided to it by all of the registered organizations on this network.
 
 
+## Usage
 
-> This application is an interactive interface where user has different terms of reference depending on type he belongs to, since there are three types of users:
+ This application is an interactive interface where user has different terms of reference depending on type he belongs to, since there are three types of users:
 1. Guest: who could be any user, and he has the access to search about a specific charity organization and display information about this organization stored in the blockchain.
 2. Organization: a charity org. that has an account on the website; and has the access to:
 	a. add a new family: by providing its information to be saved in the ledger.
