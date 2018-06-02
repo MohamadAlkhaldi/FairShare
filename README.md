@@ -41,7 +41,7 @@ Fair Share is web application that was created to meet of the need for a unified
 Note: if you use windows or Ubuntu 16.04, you may need some extras to run Hyperledger Fabric please visit: http://hyperledger-fabric.readthedocs.io/en/release-1.1/prereqs.html for more details.
 
 
-### Installing Dependencies
+## Installing Dependencies
 on terminal:
 ```sh
  curl -sSL https://goo.gl/6wtTN5 | bash -s 1.1.0
@@ -93,8 +93,8 @@ Now the application is fully working, you can open it on your web browser at the
 
 ## Team
  - __Development Team Members__: 
-[Alaa Migdady](https://github.com/alaamigdady)
-[Besslan Bzadough](https://github.com/Besslan)
-[Bushra Alabsi](https://github.com/BushraAlabsi)
-[Hanan Nouman](https://github.com/HananNouman)
+[Alaa Migdady](https://github.com/alaamigdady), 
+[Besslan Bzadough](https://github.com/Besslan), 
+[Bushra Alabsi](https://github.com/BushraAlabsi), 
+[Hanan Nouman](https://github.com/HananNouman), and 
 [Mohamad Alkhaldi](https://github.com/MohamadAlkhaldi)
