@@ -1,6 +1,7 @@
 # FairShare
 > This application uses hyperledger fabric blockchain framework to create a shared ledger between charity organizations where each organization can share its records about aids provided to families, and access others records.
 
+
 ## Table of Contents
 
 1. [Introduction](#introduction)
@@ -28,12 +29,12 @@ Fair Share is a web application that is created to meet the need for a unified s
 	c. view the information of a family: he has the option to view the last aid that has been given to this family and also the full history of the family aids.
 3. Admin: who has the ability to :
 	a. create new users: since this network is a private network and only verified orgs can have the right to write of the blockchain ledger; no sign up page is provided, instead; the admin register new user account which represents a specific org. (type 2 of users) to be part of this network. 
-	
 
 
 ## Requirements
 
 - Node.js - version 8.9.x or greater
+
 - Docker:
    a. MacOSX, *nix, or Windows 10: Docker version 17.06.2-ce or greater is required.
    b. Older versions of Windows: Docker Toolbox - again, Docker version Docker 17.06.2-ce or greater is required.
