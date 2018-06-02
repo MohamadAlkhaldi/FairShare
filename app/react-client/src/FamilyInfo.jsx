@@ -72,7 +72,7 @@ class FamilyInfo extends React.Component {
                 <input type="text" className="form-control" id="address" placeholder="Enter address" name='address' onChange={this.onChange} />
               </div>
               <div className="form-group">
-                <label style={{color:'#FF5733', marginRight: '10px'}} >Last aid date</label>
+                <label style={{color:'#FF5733', marginRight: '10px'}} >Date</label>
                 <input type="date" className="form-control" id="date" placeholder="Enter date" name='Date' onChange={this.onChange} />
               </div>
               <div className="form-group">

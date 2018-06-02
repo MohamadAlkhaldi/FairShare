@@ -20,52 +20,11 @@ class App extends React.Component {
       argsQuery:""
 
     }
-    // this.onChange=this.onChange.bind(this);
     this.redirect=this.redirect.bind(this);
-    //    this.query=this.query.bind(this);
-    // this.queryAll=this.queryAll.bind(this);
+
   }
 
 
-  // onChange (e) {
-  //   this.setState({
-
-  //    [e.target.name]: e.target.value });
-    
-  // }
-
-  // query(fcn,args) {
-  //   $.ajax({
-  //     type:'POST',
-  //     url: '/query',
-  //     data:{fcn:fcn,args:args}, 
-  //     success: (data) => {
-  //       console.log(data)
-  //       this.setState({
-  //         item:data
-  //       })
-  //     }
-  //   });
-
-
-  // }
-
-
- 
-
-  // queryAll(fcn,args) {
-  //   $.ajax({
-  //     type:'POST',
-  //     url: '/getAll',
-  //     data:{fcn:fcn,args:args}, 
-  //     success: (data) => {
-  //       console.log(data)
-  //       this.setState({
-  //         items:data
-  //       })
-  //     }
-  //   });
-  // }
 
   redirect(data){
     this.setState({redirect : true, data:data})
@@ -79,11 +38,7 @@ class App extends React.Component {
       return <Redirect to={this.state.data}/>;
     }
     this.state.new = this.props.username
-    // if(this.state.new === "guest"){
-    //   console.log(this.state.new)
-    //   return <Redirect to='/queryGuest'/>;
-    
-    //   }else 
+
     if(this.state.new === "#admin" && this.props.loggedIn){
       return (
       <div className='container-fluid animatedMove' style={{ marginTop: '30px'}}>
@@ -92,10 +47,6 @@ class App extends React.Component {
       <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/createAccount')}><strong>Create Account</strong></button>
       <br/>
       <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/query')}><strong>Search</strong></button>
-      <br/>
-      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/invoke')}><strong>Add New Aid</strong></button>
-      <br/>
-      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/familyinfo')}><strong>Add New Family</strong></button>
       <br/>
       </center>
       </div>
@@ -106,7 +57,8 @@ class App extends React.Component {
       <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/query')}><strong>Search Family</strong></button>
       <br/>
       <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/invoke')}><strong>Add New Aid</strong></button>
-      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/familyinfo')}><strong>Add New Family</strong></button>
+      <br/>
+      <button className='btn btn-lg choiceButton' onClick={()=> this.redirect('/familyinfo')}><strong>Update Family Information</strong></button>
       <br/>
       </center>
       </div>
