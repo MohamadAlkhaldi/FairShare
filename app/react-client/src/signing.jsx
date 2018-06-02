@@ -62,7 +62,7 @@ render () {
           <form className="form-inline"  onSubmit={this.logIn}>
             <div className="form-group">
               <label style={{color:'#FF5733', marginRight: '10px'}} htmlFor="username">Username</label>
-              <input type="text" className="form-control" id="username" placeholder="Enter email" name='username' onChange={this.onChange} />
+              <input type="text" className="form-control" id="username" placeholder="Enter Username" name='username' onChange={this.onChange} />
             </div>
             <div className="form-group">
               <label style={{color:'#FF5733', marginRight: '10px'}} htmlFor="pwd">Password</label>

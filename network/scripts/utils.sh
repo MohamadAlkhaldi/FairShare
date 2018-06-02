@@ -72,7 +72,7 @@ instantiateChaincode () {
 	VERSION=${3:-2.0}
 
 	
-		peer chaincode instantiate -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -l node -v 2.1 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org1MSP.peer')" >&log.txt
+		peer chaincode instantiate -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -l node -v 2.1 -c '{"Args":["init","a"]}' -P "OR	('Org1MSP.peer')" >&log.txt
 		
 	echo "===================== Chaincode Instantiation on peer${PEER}.org${ORG} on channel '$CHANNEL_NAME' is successful ===================== "
 	echo

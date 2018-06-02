@@ -8,30 +8,29 @@ var Chaincode = class {
     let ret = stub.getFunctionAndParameters();
     console.info(ret);
     let args = ret.params;
-    // initialise only if 4 parameters passed.
-    if (args.length != 4) {
-      return shim.error('Incorrect number of arguments. Expecting 4');
-    }
-    let aid = {
-      docType : 'aid',
+ 
+
+
+    let family = {
       familyId : 'a',
-      amount : 100,
-      organization : 'organization'
+      income : 500,
+      rent : 350,
+      address : 'Amman',
+      familyMembers : 4,
+      date : '14/7/1997'
     }
+
     let aid1 = {
       docType : 'aid',
-      familyId : 'b',
+      familyId : 'a',
       amount : 200,
       organization : "organization1"
     }
     let A = args[0];
-    let B = args[2];
-    let Aval = aid;
-    let Bval = aid1;
     try {
-      await stub.putState(A, Buffer.from(JSON.stringify(Aval)));
+      await stub.putState('?'+A, Buffer.from(JSON.stringify(family)));
       try {
-        await stub.putState(B, Buffer.from(JSON.stringify(Bval)));
+        await stub.putState(A, Buffer.from(JSON.stringify(aid1)));
         return shim.success();
       } catch (err) {
         return shim.error(err);
@@ -63,9 +62,9 @@ var Chaincode = class {
 
   // Checking if family entry exists and if not it will create it  
   async checkFamily(stub, args) {
-    if (args.length != 6) {
+    if (args.length != 5) {
 
-      return shim.error('Incorrect number of arguments. Expecting 6');
+      return shim.error('Incorrect number of arguments. Expecting 5');
     }
     // Get args value
     let id = args[0];
@@ -170,8 +169,8 @@ var Chaincode = class {
 
  // Adding the transaction to the ledger
  async addAid(stub, args) {
-  if (args.length != 6) {
-    throw new Error('Incorrect number of arguments. Expecting 6');
+  if (args.length != 5) {
+    throw new Error('Incorrect number of arguments. Expecting 5');
   }
 
     // Assigning arguments value to variables
@@ -282,7 +281,7 @@ var Chaincode = class {
 
   // Updating organization's information 
   async updateOrg(stub, args) {
-    if (args.length != 6) {
+    if (args.length != 5) {
       throw new Error('Incorrect number of arguments. Expecting name of the organization')
     }
 
