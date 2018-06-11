@@ -1,3 +1,5 @@
+//Through this commponent, an org can add a new aid details to the ledger
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';

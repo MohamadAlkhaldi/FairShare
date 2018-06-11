@@ -1,15 +1,17 @@
+// Here is where it all starts, routing, authentication check and some other stuff are happening here
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import {BrowserRouter as Router, Route, Link, NavLink, Redirect, Prompt, IndexRoute, hashHistory } from "react-router-dom";
 import { HashRouter } from 'react-router-dom'
-import App from './index.jsx';
-import Sign from './signing.jsx';
+import App from './App.jsx';
+import Sign from './Sign.jsx';
 import Home from './Home.jsx';
-import CreateAccount from './createAccount.jsx';
-import Invoke from './invoke.jsx';
-import Query from './query.jsx';
-import QueryGuest from './queryGuest.jsx';
+import CreateAccount from './CreateAccount.jsx';
+import Invoke from './Invoke.jsx';
+import Query from './Query.jsx';
+import QueryGuest from './QueryGuest.jsx';
 import FamilyInfo from './FamilyInfo.jsx';
 
 class Main extends React.Component {
@@ -28,7 +30,6 @@ super(props);
        this.queryWrap=this.queryWrap.bind(this);
        this.invokeWrap=this.invokeWrap.bind(this);
        this.createWrap=this.createWrap.bind(this);
-
        this.familyWrap=this.familyWrap.bind(this);
 }
 componentDidMount(){
@@ -43,19 +44,16 @@ componentDidMount(){
           x: true
         })
       },
-   error:(data) => {
-    this.setState({
+    error:(data) => {
+        this.setState({
           x: true
         })
-   }  
-
+    }
   })
 }
 
 changeUser(name){
-
   this.setState({username: "#"+name})
-  //console.log(this.state.username)
 }
 
 changeLoggedIn(value){
@@ -97,7 +95,6 @@ familyWrap(){
       <HashRouter>
       <div>
           <div style={{marginBottom:'100px'}}>
-
           <nav className="navbar navbar-default navbar-fixed-top">
             <div className="container">
               <div className="navbar-header">
@@ -123,7 +120,7 @@ familyWrap(){
           <div className="jumbotron text-center f">
           <div>
             <h1>Fair Share</h1> 
-           <br/><br/>
+            <br/><br/>
           </div>
           </div>
 

@@ -1,3 +1,5 @@
+//A guest can use this component to search for some stats about a certain org
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';

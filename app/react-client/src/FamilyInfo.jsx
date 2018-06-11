@@ -1,3 +1,4 @@
+//here the organization can update family details in the ledger
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
@@ -5,7 +6,6 @@ import {Redirect} from "react-router-dom";
 
 class FamilyInfo extends React.Component {
   constructor(props) {
-
     super(props);
     this.state = {
       familyId:"",
@@ -14,20 +14,15 @@ class FamilyInfo extends React.Component {
       address:"",
       familyMembers:0,
       date: '',
-      // familyinfo:true,
       mssg:false
     }
     this.onChange=this.onChange.bind(this);
     this.invoke=this.invoke.bind(this);
-
   }
 
   onChange (e) {
- 
     this.setState({
-
      [e.target.name]: e.target.value });
-    
   }
   
  invoke(e) {
@@ -43,7 +38,6 @@ class FamilyInfo extends React.Component {
         })
       }
     })
-
   }
 
    render () {
